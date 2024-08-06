@@ -1,0 +1,98 @@
+{% extends "sidebar_header.html" %} 
+{%block head%} 
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static',path='css/currencyExchangeAdmin.css')}}" />
+{%endblock%} 
+{%block content%}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Exchange Rate</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/currencyExchangeAdmin" method="post">
+                        <div class="mb-3">
+                            <label for="from" class="form-label">From</label>
+                            <select class="form-select" id="from" name="from" required>
+                                <option value="" disabled selected>Select Currency</option>
+                                <option value="USD">USD</option>
+                                <option value="THB">THB</option>
+                                <option value="JPY">JPY</option>
+                                <option value="EUR">EUR</option>
+                                <option value="CNY">CNY</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="to" class="form-label">To</label>
+                            <select class="form-select" id="to" name="to" required>
+                                <option value="" disabled selected>Select Currency</option>
+                                <option value="USD">USD</option>
+                                <option value="THB">THB</option>
+                                <option value="JPY">JPY</option>
+                                <option value="EUR">EUR</option>
+                                <option value="CNY">CNY</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sellRate" class="form-label">Sell Rate</label>
+                            <input type="number" class="form-control" id="sellRate" name="sellRate" placeholder="0.00" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyRate" class="form-label">Buy Rate</label>
+                            <input type="number" class="form-control" id="buyRate" name="buyRate" placeholder="0.00" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Exchange Rate List</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">From</th>
+                                <th scope="col">To</th>
+                                <th scope="col">Sell Rate</th>
+                                <th scope="col">Buy Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>USD</td>
+                                <td>THB</td>
+                                <td>30.50</td>
+                                <td>29.50</td>
+                            </tr>
+                            <tr>
+                                <td>USD</td>
+                                <td>JPY</td>
+                                <td>111.00</td>
+                                <td>109.00</td>
+                            </tr>
+                            <tr>
+                                <td>USD</td>
+                                <td>EUR</td>
+                                <td>0.86</td>
+                                <td>0.84</td>
+                            </tr>
+                            <tr>
+                                <td>USD</td>
+                                <td>CNY</td>
+                                <td>6.55</td>
+                                <td>6.45</td>
+                            </tr>   
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
