@@ -1,36 +1,43 @@
 /* Custom size for the carousel */
 .small-carousel {
-    width: 500px;
-    height: 200px;
+    width: 100%;
+    height: 180px;
     margin: 0 auto;
 }
+
 .small-carousel .carousel-inner {
     width: 100%;
     height: 100%;
     color: white;
 }
+
 .small-carousel .carousel-item {
     width: 100%;
     height: 100%;
-    background-color: #007bff;
+    background: linear-gradient(90deg, rgba(70, 170, 255, 1) 7%, rgba(0, 210, 252, 1) 35%, rgba(135, 124, 255, 1) 69%);
+    border-radius: 5px;
 }
+
 .small-carousel .carousel-item .account-info {
     text-align: center;
-    padding-top: 50px;
+    padding-top: 30px;
 }
+
 .carousel-control-prev,
 .carousel-control-next {
     width: 5%;
 }
 
 .carousel-control-prev {
-    left: 0; /* Ensure prev button is on the left */
-    z-index: 1; /* Ensure it's on top of other elements */
+    left: 0;
+    /* Ensure prev button is on the left */
+    z-index: 1;
+    /* Ensure it's on top of other elements */
 }
 
 .carousel-control-next {
-    right: 0; /* Ensure next button is on the right */
-    z-index: 1; /* Ensure it's on top of other elements */
+    right: 0;
+    z-index: 1;
 }
 
 .carousel-control-prev-icon,
@@ -38,6 +45,79 @@
     background-color: transparent;
 }
 
+.transfer-btn {
+    background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1));
+    color: white;
+    border: none;
+    padding: 10px 45px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+.transfer-btn:hover {
+    background: linear-gradient(to left, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1));
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.cancel-btn {
+    background-image: linear-gradient(to left, rgba(135, 124, 255, 1), #f7186a);
+    color: white;
+    border: none;
+    padding: 10px 45px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+.cancel-btn:hover {
+    background-image: linear-gradient(to right, rgba(135, 124, 255, 1), #f7186a);
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
 #transfer-page {
     --white-color: none;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+
+#from-header,
+#to-header {
+    padding: 10px 20px;
+    width: 100%;
+    background-color: var(--first-color);
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 20px;
+}
+
+#from-header {
+    margin-top: 20px;
+}
+
+.background-widget-top,
+.background-widget-bottom {
+    background-color: white;
+    border-radius: 5px;
+    margin-top: -10px;
+}
+
+.background-widget-top {
+    padding: 20px 15px;
+}
+
+.background-widget-bottom {
+    padding: 20px 15px 5px 15px;
 }
