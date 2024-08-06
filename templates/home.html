@@ -1,8 +1,12 @@
-{% extends "sidebar_header.html" %}
-{%block head%}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('static',path='/css/home_student.css')}}">
-{%endblock%}
-{%block content%}
-      <h4>Main Components</h4>
+{% extends "sidebar_header.html" %} {%block head%} {{super()}}
+<link rel="stylesheet" href="{{url_for('static',path='css/home.css')}}" />
+{%endblock%} {%block content%}
+<div class="card-bottom pt-3 px-3">
+  <div class="d-flex flex-row justify-content-between text-align-center">
+    <div class="d-flex flex-column">
+      <span >Balance amount</span>
+      <p>&#3647; <span class="text-white">88,989</span></p>
+    </div>
+  </div>
+</div>
 {%endblock%}

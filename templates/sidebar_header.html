@@ -24,10 +24,14 @@
       href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
 
     <!-- Template Main CSS File -->
-    <link rel="stylesheet" href="{{url_for('static',path='css/home.css')}}" />
-    <script type="text/javascript" src="/static/js/home.js"></script>
+    <link rel="stylesheet" href="{{url_for('static',path='css/header.css')}}" />
+    <script type="text/javascript" src="/static/js/header.js"></script>
     {% endblock %}
   </head>
   <body id="body-pd">
@@ -35,54 +39,47 @@
       <div class="header_toggle">
         <i class="bx bx-menu" id="header-toggle"></i>
       </div>
-      <div class="header_img">
-
+      <div class="welcome_message">
+        <p class="m-0">Welcome, Name</p>
       </div>
     </header>
     <div class="l-navbar" id="nav-bar">
       <nav class="nav">
         <div>
           <a href="#" class="nav_logo">
-            <i class="bx bx-layer nav_logo-icon"></i>
+            <i class="bi bi-bank nav_icon"></i>
             <span class="nav_logo-name">BankMatrix</span>
           </a>
           <div class="nav_list">
             <a href="#" class="nav_link active">
-              <i class="bx bx-grid-alt nav_icon"></i>
-              <span class="nav_name">Dashboard</span>
+              <i class="bi bi-house-door-fill nav_icon"></i>
+              <span class="nav_name">Home</span>
             </a>
             <a href="#" class="nav_link">
-              <i class="bx bx-user nav_icon"></i>
-              <span class="nav_name">Users</span>
+              <i class="bi bi-arrow-down-up nav_icon"></i>
+              <span class="nav_name">Transfer</span>
             </a>
             <a href="#" class="nav_link">
-              <i class="bx bx-message-square-detail nav_icon"></i>
-              <span class="nav_name">Messages</span>
+              <i class="bi bi-cash-stack nav_icon"></i>
+              <span class="nav_name">Cardless Transaction</span>
             </a>
             <a href="#" class="nav_link">
-              <i class="bx bx-bookmark nav_icon"></i>
-              <span class="nav_name">Bookmark</span>
+              <i class="bi bi-person-rolodex nav_icon"></i>
+              <span class="nav_name">Loans</span>
             </a>
             <a href="#" class="nav_link">
-              <i class="bx bx-folder nav_icon"></i>
-              <span class="nav_name">Files</span>
-            </a>
-            <a href="#" class="nav_link">
-              <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
-              <span class="nav_name">Stats</span>
+              <i class="bi bi-currency-exchange nav_icon"></i>
+              <span class="nav_name">Currency Exchange</span>
             </a>
           </div>
         </div>
         <a href="#" class="nav_link">
           <i class="bx bx-log-out nav_icon"></i>
-          <span class="nav_name">SignOut</span>
+          <span class="nav_name">Sign Out</span>
         </a>
       </nav>
     </div>
     <!--Container Main start-->
-    <div class="height-100 bg-light">
-        {%block content%}
-        {% endblock %}
-    </div>
+    <div class="content">{%block content%} {% endblock %}</div>
   </body>
 </html>
