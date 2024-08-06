@@ -82,4 +82,4 @@ manager.cookie_name = "session"
 #login
 @app.get("/", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse("fakeATMSuccess.html", {"request": request})

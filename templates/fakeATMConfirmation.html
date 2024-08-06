@@ -1,0 +1,12 @@
+{% extends 'fakeATM.html' %} {% block head %} {{super()}} {% endblock %} {%
+block content %}
+<h1>Transaction Confirmation</h1>
+<h2>Please confirm your transaction</h2>
+<p>From Mobile Number: 123456XXXX</p>
+<p>Amount: 2000.00 Baht</p>
+<p>Fee: 0.00 baht</p>
+<div class="confirmation-buttons">
+    <button id="confirm-button">Confirm</button>
+    <button id="cancel-button">Cancel</button>
+  </div>
+{% endblock %}
