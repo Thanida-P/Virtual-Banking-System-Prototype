@@ -1,0 +1,96 @@
+{% extends "sidebar_header.html" %} {%block head%} {{super()}}
+<link
+  rel="stylesheet"
+  href="{{url_for('static',path='css/currencyExchange.css')}}"
+/>
+<script type="text/javascript" src="/static/js/currencyExchange.js"></script>
+{%endblock%} {%block content%}
+<div class="exchangeFormWrapper">
+  <form id="exchangeForm">
+    <h1 id="register">Survey Form</h1>
+    <div class="all-steps" id="all-steps">
+      <span class="step"><i class="bi bi-1-circle-fill"></i></span>
+      <span class="step"><i class="bi bi-2-circle-fill"></i></span>
+    </div>
+
+    <div class="tab">
+      <h6>Please select a currency:</h6>
+      <p>
+        <select name="currency" class="form-select" id="currency" required>
+          <option value="" disabled selected>Select a currency</option>
+          <option value="USD">USD - United States Dollar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="GBP">GBP - British Pound Sterling</option>
+          <option value="JPY">JPY - Japanese Yen</option>
+          <option value="AUD">AUD - Australian Dollar</option>
+          <option value="CAD">CAD - Canadian Dollar</option>
+          <option value="CHF">CHF - Swiss Franc</option>
+          <option value="CNY">CNY - Chinese Yuan</option>
+          <option value="SGD">SGD - Singapore Dollar</option>
+          <option value="HKD">HKD - Hong Kong Dollar</option>
+          <option value="NZD">NZD - New Zealand Dollar</option>
+          <option value="SEK">SEK - Swedish Krona</option>
+          <option value="DKK">DKK - Danish Krone</option>
+          <option value="NOK">NOK - Norwegian Krone</option>
+          <option value="KRW">KRW - South Korean Won</option>
+          <option value="TWD">TWD - New Taiwan Dollar</option>
+          <option value="MYR">MYR - Malaysian Ringgit</option>
+          <option value="IDR">IDR - Indonesian Rupiah</option>
+          <option value="INR">INR - Indian Rupee</option>
+          <option value="PHP">PHP - Philippine Peso</option>
+          <option value="VND">VND - Vietnamese Dong</option>
+          <option value="ZAR">ZAR - South African Rand</option>
+        </select>
+      </p>
+    </div>
+    <div class="tab">
+      <h6>Please select an exchange option:</h6>
+      <p>
+        <select
+          name="exchangeOption"
+          class="form-select"
+          id="exchangeOption"
+          required
+        >
+          <option value="" disabled selected>Select an exchange option</option>
+          <option value="buy">Buy</option>
+          <option value="sell">Sell</option>
+        </select>
+      </p>
+    </div>
+    <div id="currency-rate">
+      <div class="from">
+        <span>Exchange from THB to USD: </span>
+        <span id="rate">1 THB = 0.03 USD</span>
+      </div>
+      <div class="to">
+        <span>Exchange from USD to THB: </span>
+        <span id="rate">1 USD = 33.33 THB</span>
+      </div>
+    </div>
+    <div id="exchange-form">
+      <label for="baht">Thai Baht:</label>
+      <input type="number" id="baht" name="baht" required />
+      <label for="other" class="mt-3">USD:</label>
+      <input type="number" id="other" name="other" class="mb-3" required />
+    </div>
+    <div class="thanks-message text-center" id="text-message">
+      <h3>Exchange Successful!</h3>
+      <p>Thank you for using our currency exchange service.</p>
+      <span><b>Current THB Balance:</b> 100,000.00 THB</span
+      ><br />
+      <span><b>Current USD Balance:</b> 3,333.33 USD</b></span>
+    </div>
+    <div style="overflow: auto" id="nextprevious">
+      <div style="float: right">
+        <button type="button" id="prevBtn" onclick="nextPrev(-1)">
+          <i class="bi bi-chevron-double-left"></i>
+        </button>
+        <button type="button" id="nextBtn" onclick="nextPrev(1)">
+          <i class="bi bi-chevron-double-right"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+{%endblock%}
