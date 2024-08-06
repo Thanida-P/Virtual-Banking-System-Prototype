@@ -2,7 +2,7 @@
 
 {% block head %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', path='css/transfer.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='css/withdrawal.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -51,28 +51,19 @@
                     </div>
                 </div>
             </div>
-            <label for="bank" id="to-header" class="form-label">To</label>
+            <label for="bank" id="amount-header" class="form-label">Amount</label>
             <div class="background-widget-bottom">
                 <div class="mb-3">
-                    <select class="form-select" id="bank" name="bank" required>
-                        <option value="" disabled selected>Select Bank</option>
-                        <option value="bank1">Bank 1</option>
-                        <option value="bank2">Bank 2</option>
-                        <option value="bank3">Bank 3</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="account_number" class="form-label">Account Number</label>
-                    <input type="text" class="form-control" id="account_number" name="account_number" required>
-                </div>
-                <div class="mb-3">
-                    <label for="amount" class="form-label">Amount</label>
                     <input type="number" class="form-control" id="amount" name="amount" placeholder="0.00" min="100" max="50000" required>
                 </div>
+                <div class="mb-3" class="remaining-limit">
+                    <p>Remaining limit today:  &#3647;50,000.00<br>Amount needs to be divisible by 100</p>
+                </div>
             </div>
+            <p class="announce-label">Your previous active Withdraw Code will be automatically cancelled when you make a new request.</p>
             <div class="button-container">
                 <a href="/home" class="cancel-btn">Cancel</a>
-                <button type="submit" class="transfer-btn">Transfer</button>
+                <button type="submit" class="transfer-btn">Review</button>
             </div>
         </form>
     </div>

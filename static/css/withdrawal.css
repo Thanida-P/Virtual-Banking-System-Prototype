@@ -92,7 +92,7 @@
 
 
 #from-header,
-#to-header {
+#amount-header {
     padding: 10px 20px;
     width: 100%;
     background-color: var(--first-color);
@@ -116,10 +116,17 @@
 
 .background-widget-top {
     padding: 20px 15px;
+    text-align: center;
 }
 
 .background-widget-bottom {
     padding: 20px 15px 5px 15px;
+    text-align: right;
+}
+
+.announce-label {
+    margin-top: 30px;
+    text-align: center;
 }
 
 input {
