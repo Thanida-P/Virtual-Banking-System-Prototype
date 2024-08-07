@@ -13,6 +13,7 @@ from fastapi_login import LoginManager
 from fastapi.security import OAuth2PasswordRequestForm
 
 import os, base64
+import random
 
 from fastapi.security import OAuth2PasswordRequestForm
 import ZODB, ZODB.FileStorage
@@ -129,13 +130,21 @@ async def home(request: Request):
 async def transfer(request: Request):
     return templates.TemplateResponse("transfer.html", {"request": request})
 
+
+#withdraw
 @app.get("/withdraw", response_class=HTMLResponse)
 async def withdraw(request: Request):
     return templates.TemplateResponse("withdrawal.html", {"request": request})
 
-@app.get("/withdraw/otp", response_class=HTMLResponse)
-async def withdrawOtp(request: Request):
-    return templates.TemplateResponse("withdrawalOtp.html", {"request": request})
+def generate_otp(length=6):
+    """Generate a random OTP of specified length."""
+    otp = ''.join(random.choices('0123456789', k=length))
+    return otp
+
+@app.get("/withdraw/{otp}", response_class=HTMLResponse)
+async def withdrawOtp(request: Request, otp: str):
+    otp = generate_otp()
+    return templates.TemplateResponse("withdrawalOtp.html", {"request": request, "otp": otp})
 
 @app.get("/transfer/review", response_class=HTMLResponse)
 async def transferReview(request: Request):
