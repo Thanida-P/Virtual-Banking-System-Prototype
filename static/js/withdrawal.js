@@ -1,8 +1,4 @@
 $(document).ready(function() {
-    $('.carousel').carousel({
-        interval: false // Disable automatic cycling
-    });
-
     // only for the withdrawal page
     $('#withdraw-form').on('submit', function(event) {
         const amount = $('#withdraw-amount').val();
