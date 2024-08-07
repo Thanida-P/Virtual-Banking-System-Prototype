@@ -45,7 +45,7 @@
     background-color: transparent;
 }
 
-.transfer-review-btn {
+.review-btn {
     background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(135, 124, 255, 1));
     color: white;
     border: none;
@@ -56,7 +56,7 @@
     font-size: 20px;
 }
 
-.transfer-review-btn:hover {
+.review-btn:hover {
     background: linear-gradient(to left, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1));
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -80,7 +80,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-#transfer-page {
+#withdraw-page {
     --white-color: none;
 }
 
@@ -92,7 +92,7 @@
 
 
 #from-header,
-#to-header {
+#amount-header {
     padding: 10px 20px;
     width: 100%;
     background-color: var(--first-color);
@@ -116,10 +116,17 @@
 
 .background-widget-top {
     padding: 20px 15px;
+    text-align: center;
 }
 
 .background-widget-bottom {
     padding: 20px 15px 5px 15px;
+    text-align: right;
+}
+
+.announce-label {
+    margin-top: 30px;
+    text-align: center;
 }
 
 input {
