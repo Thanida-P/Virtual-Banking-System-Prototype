@@ -60,12 +60,12 @@
     </div>
     <div id="currency-rate">
       <div class="from">
-        <span>Exchange from THB to USD: </span>
-        <span id="rate">1 THB = 0.03 USD</span>
+        <span>Buying Rate: </span>
+        <span id="buyRate"></span>
       </div>
       <div class="to">
-        <span>Exchange from USD to THB: </span>
-        <span id="rate">1 USD = 33.33 THB</span>
+        <span>Selling Rate: </span>
+        <span id="sellRate"></span>
       </div>
     </div>
     <div id="exchange-form">
@@ -89,6 +89,9 @@
         <button type="button" id="nextBtn" onclick="nextPrev(1)">
           <i class="bi bi-chevron-double-right"></i>
         </button>
+        <submit type="submit" id="submitBtn">
+          <i class="bi bi-chevron-double-right"></i>
+        </submit>
       </div>
     </div>
   </form>

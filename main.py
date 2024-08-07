@@ -18,15 +18,16 @@ from fastapi.security import OAuth2PasswordRequestForm
 import ZODB, ZODB.FileStorage
 import transaction
 import BTrees._OOBTree
-import random
-import string
 from datetime import datetime, timedelta
 import os
 
 class NotAuthenticatedException(Exception):
     pass
 
-SECRET = 'xxx'
+def generate_session():
+    return base64.b64encode(os.urandom(16))
+
+SECRET = generate_session()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -46,6 +47,45 @@ if not hasattr(root, "customers"):
     root.customers = BTrees.OOBTree.BTree()
 if not hasattr(root, "admin"):
     root.admin = BTrees.OOBTree.BTree()
+if not hasattr(root, "accounts"):
+    root.accounts = BTrees.OOBTree.BTree()
+if not hasattr(root, "transfers"):
+    root.transfers = BTrees.OOBTree.BTree()
+if not hasattr(root, "withdrawals"):
+    root.withdrawals = BTrees.OOBTree.BTree()
+if not hasattr(root, "currency"):
+    root.currency = BTrees.OOBTree.BTree()
+    currencyID = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "CNY", "SGD", "HKD", "NZD", "SEK", "DKK", "NOK", "KRW", "TWD", "MYR", "IDR", "INR", "PHP", "VND", "ZAR"]
+    currencyName = ["United States Dollar", "Euro", "British Pound Sterling", "Japanese Yen", "Australian Dollar", "Canadian Dollar", "Swiss Franc", "Chinese Yuan", "Singapore Dollar", "Hong Kong Dollar", "New Zealand Dollar", "Swedish Krona", "Danish Krone", "Norwegian Krone", "South Korean Won", "New Taiwan Dollar", "Malaysian Ringgit", "Indonesian Rupiah", "Indian Rupee", "Philippine Peso", "Vietnamese Dong", "South African Rand"]
+    currencyRate = [
+        [35.41, 35.57],  # USD
+        [39.00, 39.17],  # EUR
+        [45.10, 45.25],  # GBP
+        [0.244, 0.246],  # JPY
+        [23.94, 24.15],  # AUD
+        [26.50, 26.70],  # CAD
+        [40.12, 40.32],  # CHF
+        [4.88, 4.91],    # CNY
+        [26.83, 27.00],  # SGD
+        [4.54, 4.57],    # HKD
+        [21.10, 21.20],  # NZD
+        [3.35, 3.37],    # SEK
+        [5.23, 5.25],    # DKK
+        [3.26, 3.28],    # NOK
+        [0.025, 0.026],  # KRW
+        [1.08, 1.10],    # TWD
+        [7.95, 8.00],    # MYR
+        [0.002, 0.0022], # IDR
+        [0.423, 0.425],  # INR
+        [0.615, 0.617],  # PHP
+        [0.0015, 0.0016],# VND
+        [1.92, 1.95]     # ZAR
+    ]
+
+    
+    for i in range(len(currencyID)):
+        root.currency[currencyID[i]] = Currency(currencyID[i], currencyName[i], currencyRate[i])
+        transaction.commit()
   
 #load user
 # @manager.user_loader()
@@ -104,3 +144,12 @@ async def transferReview(request: Request):
 @app.get("/currency-exchange", response_class=HTMLResponse)
 async def currencyExchange(request: Request):
     return templates.TemplateResponse("currencyExchange.html", {"request": request})
+
+@app.post("/get-currency-rate/{currencyID}")
+async def getCurrencyRate(request: Request, currencyID: str):
+    currencyRate = root.currency[currencyID].getCurrencyRate()
+    return {"buyRate": currencyRate[0], "sellRate": currencyRate[1]}
+
+@app.get("/fakeAtm", response_class=HTMLResponse)
+async def fakeAtm(request: Request):
+    return templates.TemplateResponse("fakeAtm.html", {"request": request})
