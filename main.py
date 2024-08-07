@@ -1,8 +1,19 @@
+# from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
+# from fastapi.responses import HTMLResponse, RedirectResponse
+
+# from fastapi_login import LoginManager
+from object import *
+
+from fastapi import FastAPI, Request
 from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi_login import LoginManager
+from fastapi.security import OAuth2PasswordRequestForm
+
+import os, base64
+
 from fastapi.security import OAuth2PasswordRequestForm
 import ZODB, ZODB.FileStorage
 import transaction
@@ -25,31 +36,16 @@ templates = Jinja2Templates(directory="templates")
 manager = LoginManager(SECRET, token_url='/login', use_cookie=True, custom_exception=NotAuthenticatedException)
 manager.cookie_name = "session"
 
-# storage = ZODB.FileStorage.FileStorage('data/userData.fs')
-# db = ZODB.DB(storage)
-# connection = db.open()
-# root = connection.root
+storage = ZODB.FileStorage.FileStorage('data/bankData.fs')
+db = ZODB.DB(storage)
+connection = db.open()
+root = connection.root
 
 # #create root if it does not exist
-# if not hasattr(root, "students"):
-#     root.students = BTrees.OOBTree.BTree()
-# if not hasattr(root, "teachers"):
-#     root.teachers = BTrees.OOBTree.BTree()
-# if not hasattr(root, "teacherCourses"):
-#     root.teacherCourses = BTrees.OOBTree.BTree()
-# if not hasattr(root, "studentCourses"):
-#     root.studentCourses = BTrees.OOBTree.BTree()
-# if not hasattr(root, "announcements"):
-#     root.announcements = BTrees.OOBTree.BTree()
-# if not hasattr(root, "assignments"):
-#     root.assignments = BTrees.OOBTree.BTree()
-# if not hasattr(root, "studentAssignments"):
-#     root.studentAssignments = BTrees.OOBTree.BTree()
-# if not hasattr(root, "attendances"):
-#     root.attendances = BTrees.OOBTree.BTree()
-# if not hasattr(root, "studentAttendances"):
-#     root.studentAttendances = BTrees.OOBTree.BTree()
-  
+if not hasattr(root, "customers"):
+    root.customers = BTrees.OOBTree.BTree()
+if not hasattr(root, "admin"):
+    root.admin = BTrees.OOBTree.BTree()
   
 #load user
 # @manager.user_loader()
