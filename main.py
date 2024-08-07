@@ -23,7 +23,7 @@ class NotAuthenticatedException(Exception):
     pass
 
 def generate_session():
-    return base64.b64encode(os.urandom(16))
+    return base64.b64encode(os.urandom(32))
 
 SECRET = generate_session()
 
