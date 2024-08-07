@@ -78,7 +78,10 @@ a {
 }
 .nav_logo {
   margin-bottom: 2rem;
+  pointer-events: none;
+  cursor: default; /* Optional: changes the cursor to the default arrow */
 }
+
 .nav_logo-icon {
   font-size: 1.25rem;
   color: var(--white-color);

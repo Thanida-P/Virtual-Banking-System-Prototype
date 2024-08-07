@@ -51,19 +51,19 @@
             <span class="nav_logo-name">BankMatrix</span>
           </a>
           <div class="nav_list">
-            <a href="#" class="nav_link active">
+            <a href="/home" class="nav_link {% if request.path == '/home' %}active{% endif %}">
               <i class="bi bi-house-door-fill nav_icon"></i>
               <span class="nav_name">Home</span>
             </a>
-            <a href="#" class="nav_link">
+            <a href="/transfer" class="nav_link {% if request.path == '/transfer' %}active{% endif %}">
               <i class="bi bi-arrow-down-up nav_icon"></i>
               <span class="nav_name">Transfer</span>
             </a>
-            <a href="#" class="nav_link">
+            <a href="/withdraw" class="nav_link {% if request.path == '/withdraw' %}active{% endif %}">
               <i class="bi bi-cash-stack nav_icon"></i>
               <span class="nav_name">Cardless Transaction</span>
             </a>
-            <a href="#" class="nav_link">
+            <a href="/currency-exchange" class="nav_link {% if request.path == '/currency-exchange' %}active{% endif %}">
               <i class="bi bi-currency-exchange nav_icon"></i>
               <span class="nav_name">Currency Exchange</span>
             </a>
@@ -79,3 +79,5 @@
     <div class="content">{%block content%} {% endblock %}</div>
   </body>
 </html>
+
+<script>
