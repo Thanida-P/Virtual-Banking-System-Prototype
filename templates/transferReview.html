@@ -17,7 +17,7 @@
                 <div class="mb-3">
                     <div class="account-review border rounded p-3 mb-3">
                         <h5>From Account:</h5>
-                        <p>Account Number: <strong>123456789</strong><br>Balance: <strong>&#3647;1,000.00</strong></p>
+                        <p class="account-num">Account Number: <strong>123456789</strong><br>Balance: <strong>&#3647;1,000.00</strong></p>
                     </div>
                     <div class="amount-review border rounded p-3 mb-3">
                         <h5>To Account:</h5>
@@ -30,13 +30,13 @@
                         <p><strong>&#3647;0.00</strong></p>
 
                         <h5>Total Amount:</h5>
-                        <p><strong>&#3647;500.00</strong></p>
+                        <p class="total-amount"><strong>&#3647;500.00</strong></p>
 
                     </div>
                 </div>
                 <div class="buttons">
                     <a href="#" class="back-btn" onclick="window.location.href='/transfer'">Back</a>
-                    <button type="submit" class="submit-btn">Confirm</button>
+                    <button type="submit" class="submit-btn" onclick="reviewTransfer()" >Confirm</button>
                 </div>
             </form>
         </div>

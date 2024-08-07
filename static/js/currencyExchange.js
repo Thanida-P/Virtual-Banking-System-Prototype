@@ -16,11 +16,11 @@ function showTab(n) {
     document.getElementById("prevBtn").style.display = "inline";
   }
   if (n == x.length - 1) {
-    document.getElementById("nextBtn").innerHTML =
-      '<i class="bi bi-chevron-double-right"></i>';
+    document.getElementById("submitBtn").style.display = inline;
+    document.getElementById("nextBtn").style.display = "none";
   } else {
-    document.getElementById("nextBtn").innerHTML =
-      '<i class="bi bi-chevron-double-right"></i>';
+    document.getElementById("nextBtn").style.display = "inline";
+    document.getElementById("submitBtn").style.display = "none";
   }
   fixStepIndicator(n);
 }
@@ -57,6 +57,24 @@ function nextPrev(n) {
 }
 
 function validateForm() {
+  if (currentTab == 0) {
+    var currency = document.getElementById("currency").value;
+    if (currency == "") {
+      alert("Select a currency.");
+      return false;
+    }
+  } else if (currentTab == 1) {
+    var exchangeOption = document.getElementById("exchangeOption").value;
+    if (exchangeOption == "") {
+      alert("Select an exchange option.");
+      return false;
+    }
+    var amount = document.getElementById("baht").value;
+    if (amount == "") {
+      alert("Enter an amount.");
+      return false;
+    }
+  }
   return true;
 }
 
@@ -71,6 +89,21 @@ function fixStepIndicator(n) {
 
 function displayRates() {
   var currencyRate = document.getElementById("currency-rate");
+  var currency = document.getElementById("currency").value;
+  var currencyID = currency.split(" ")[0];
+  var url = "/get-currency-rate/" + currencyID;
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    return response.json();
+  }).then((data) => {
+    document.getElementById("buyRate").innerHTML = " 1 THB = " + data.buyRate + " " + currencyID;
+    document.getElementById("sellRate").innerHTML = " 1 " + currencyID + " = " + data.sellRate + " THB";
+  });
+
   if (
     currencyRate.style.display == "" ||
     currencyRate.style.display == "none"

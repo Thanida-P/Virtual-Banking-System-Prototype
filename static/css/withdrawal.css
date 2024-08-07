@@ -20,7 +20,7 @@
 
 .small-carousel .carousel-item .account-info {
     text-align: center;
-    padding-top: 30px;
+    padding-top: 2%;
 }
 
 .carousel-control-prev,
@@ -52,7 +52,7 @@
     padding: 10px 45px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 2%;
     font-size: 20px;
 }
 
@@ -70,7 +70,7 @@
     padding: 10px 45px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 2%;
     font-size: 20px;
 }
 
@@ -87,7 +87,7 @@
 .button-container {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 2%;
 }
 
 
@@ -99,12 +99,12 @@
     color: white;
     border-radius: 5px;
     font-weight: bold;
-    margin-top: 5px;
+    margin-top: 0.01%;
     font-size: 20px;
 }
 
 #from-header {
-    margin-top: 20px;
+    margin-top: 1%;
 }
 
 .background-widget-top,
@@ -115,13 +115,13 @@
 }
 
 .background-widget-top {
-    padding: 20px 15px;
+    padding: 1%;
     text-align: center;
     margin-bottom: 15px;
 }
 
 .background-widget-bottom {
-    padding: 20px 15px 5px 15px;
+    padding: 1%;
     text-align: right;
 }
 

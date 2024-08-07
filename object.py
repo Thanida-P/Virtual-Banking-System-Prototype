@@ -54,3 +54,12 @@ class Currency(persistent.Persistent):
         self.currencyID = currencyID
         self.currencyname = currencyname
         self.currencyrate = currencyrate
+        
+    def getCurrencyID(self):
+        return self.currencyID
+    
+    def getCurrencyName(self):
+        return self.currencyname
+    
+    def getCurrencyRate(self):  
+        return self.currencyrate
