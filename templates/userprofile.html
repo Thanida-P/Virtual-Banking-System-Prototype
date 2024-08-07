@@ -1,0 +1,91 @@
+{% extends "sidebar_header.html" %}
+{%block head%}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static',path='/css/userprofile.css')}}">
+{%endblock%}    
+{%block content%}
+
+<section style="background-color: #eee;">
+    <div class="container py-5">
+  
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3">John Smith</h5>
+              <p class="text-muted mb-1">John</p>
+              <p class="text-muted mb-4">+66624452270</p>
+              <p class="text-muted mb-4">Bangkok, Thailand</p>
+              
+            </div>
+          </div>
+          <div class="card mb-4 mb-lg-0">
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush rounded-3">
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  <p class="mb-0">Date of Birth</p>
+                  <p class="mb-0">22/4/1989</p>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  <p class="mb-0">Marital Status</p>
+                  <p class="mb-0">Single</p>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  <p class="mb-0">Education</p>
+                  <p class="mb-0">Graduate</p>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  <p class="mb-0">Email</p>
+                  <p class="mb-0">john345867@gmail.com</p>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  <p class="mb-0">Citizen Id</p>
+                  <p class="mb-0">MF789889</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Bank Account No</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">693-456-7890</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Accont Type</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">Savings Account</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Currency Type</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">THB</p>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+      
+{%endblock%}
