@@ -1,7 +1,3 @@
-# from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
-# from fastapi.responses import HTMLResponse, RedirectResponse
-
-# from fastapi_login import LoginManager
 from object import *
 
 from fastapi import FastAPI, Request
@@ -13,11 +9,13 @@ from fastapi_login import LoginManager
 from fastapi.security import OAuth2PasswordRequestForm
 
 import os, base64
+import bcrypt
 
 from fastapi.security import OAuth2PasswordRequestForm
 import ZODB, ZODB.FileStorage
 import transaction
 import BTrees._OOBTree
+import secrets
 from datetime import datetime, timedelta
 import os
 
@@ -25,7 +23,7 @@ class NotAuthenticatedException(Exception):
     pass
 
 def generate_session():
-    return base64.b64encode(os.urandom(16))
+    return  base64.urlsafe_b64encode(secrets.token_bytes(32))
 
 SECRET = generate_session()
 
@@ -37,7 +35,7 @@ templates = Jinja2Templates(directory="templates")
 manager = LoginManager(SECRET, token_url='/login', use_cookie=True, custom_exception=NotAuthenticatedException)
 manager.cookie_name = "session"
 
-storage = ZODB.FileStorage.FileStorage('data/bankData.fs')
+storage = ZODB.FileStorage.FileStorage('data/bankdatabase.fs')
 db = ZODB.DB(storage)
 connection = db.open()
 root = connection.root
@@ -88,32 +86,32 @@ if not hasattr(root, "currency"):
         transaction.commit()
   
 #load user
-# @manager.user_loader()
-# def load_user(email: str):
-#     user = None
+@manager.user_loader()
+def load_user(username: str):
+    user = None
 
-#     for t in root.teachers:
-#         if email == root.teachers[t].getEmail():
-#             user = root.teachers[t]
+    for c in root.customers:
+        if username == root.customers[c].getUsername():
+            user = root.customers[c]
     
-#     for s in root.students:
-#         if email == root.students[s].getEmail():
-#             user = root.students[s]
+    for s in root.admin:
+        if username == root.admin[s].getUsername():
+            user = root.admin[s]
 
-#     return user
+    return user
 
 #check if the user is login
-# @app.exception_handler(NotAuthenticatedException)
-# def auth_exception_handler(request: Request, exc: NotAuthenticatedException):
-#     return RedirectResponse(url='/login')
+@app.exception_handler(NotAuthenticatedException)
+def auth_exception_handler(request: Request, exc: NotAuthenticatedException):
+    return RedirectResponse(url='/login')
 
 #redirect to the correct home page (teacher or student)
-# @app.get("/", response_class=HTMLResponse)
-# async def redirect(request: Request, user_info=Depends(manager)):
-#     if isinstance(user_info, Student):
-#         return RedirectResponse(url="/home_student", status_code=302)
-#     elif isinstance(user_info, Teacher):
-#         return RedirectResponse(url="/home_teacher", status_code=302)
+@app.get("/", response_class=HTMLResponse)
+async def redirect(request: Request, user_info=Depends(manager)):
+    if isinstance(user_info, UserAccount):
+        return RedirectResponse(url="/home", status_code=302)
+    elif isinstance(user_info, AdminAccount):
+        return RedirectResponse(url="/home_admin", status_code=302)
  
 #login
 @app.get("/", response_class=HTMLResponse)
@@ -122,34 +120,113 @@ async def login(request: Request):
 
 #home
 @app.get("/home", response_class=HTMLResponse)
-async def home(request: Request):
+async def home(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("home.html", {"request": request})
 
 @app.get("/transfer", response_class=HTMLResponse)
-async def transfer(request: Request):
+async def transfer(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("transfer.html", {"request": request})
 
 @app.get("/withdraw", response_class=HTMLResponse)
-async def withdraw(request: Request):
+async def withdraw(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("withdrawal.html", {"request": request})
 
 @app.get("/withdraw/review", response_class=HTMLResponse)
-async def withdrawReview(request: Request):
+async def withdrawReview(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("withdrawalReview.html", {"request": request})
 
 @app.get("/transfer/review", response_class=HTMLResponse)
-async def transferReview(request: Request):
+async def transferReview(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("transferReview.html", {"request": request})
          
 @app.get("/currency-exchange", response_class=HTMLResponse)
-async def currencyExchange(request: Request):
+async def currencyExchange(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("currencyExchange.html", {"request": request})
 
 @app.post("/get-currency-rate/{currencyID}")
-async def getCurrencyRate(request: Request, currencyID: str):
+async def getCurrencyRate(request: Request, user=Depends(manager), currencyID: str = ""):
     currencyRate = root.currency[currencyID].getCurrencyRate()
     return {"buyRate": currencyRate[0], "sellRate": currencyRate[1]}
 
 @app.get("/fakeAtm", response_class=HTMLResponse)
 async def fakeAtm(request: Request):
     return templates.TemplateResponse("fakeAtm.html", {"request": request})
+
+@app.get("/signUp", response_class=HTMLResponse)
+async def signUp(request: Request):
+    return templates.TemplateResponse("signup.html", {"request": request})
+
+def hash_password(password: str):
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.post("/signUpSubmission", response_class=HTMLResponse)
+async def signUpSubmission(request: Request, firstName: str = Form(None), middleName: str = Form(None), lastName: str = Form(None), username: str = Form(None), maritalstatus: str = Form(None), education: str = Form(None), citizenId: str = Form(None), email: str = Form(None), phno: str = Form(None), password: str = Form(None), confirmPassword: str = Form(None), bankAccount: str = Form(None), termCheck: str = Form(None), file: UploadFile = File(None)):
+    required_params = [firstName, middleName, lastName, username, citizenId, email, phno, password, confirmPassword, bankAccount, file, maritalstatus, education]
+    if any(param is None for param in required_params):
+        return f"<script> alert(\"Please fill out all fields\"); window.history.back(); </script>"
+
+    elif termCheck != "true":
+        return f"<script> alert(\"Please check the terms and conditions\"); window.history.back(); </script>"
+    
+    elif password != confirmPassword:
+        return f"<script> alert(\"Password does not match\"); window.history.back(); </script>"
+    elif not allowed_file(file.filename):
+        return f"<script> alert(\"Invalid file type\"); window.history.back(); </script>"
+    else:
+        filename = file.filename
+        filedata = file.file.read()
+        if not os.path.exists(f"profile/{username}"):
+            os.makedirs(f"profile/{username}")
+        filepath = f"profile/{username}/{filename}" if username else "profile/{filename}"
+        with open(filepath, "wb") as f:
+            f.write(filedata)
+            
+        hashPassword = hash_password(password)
+
+        for user in root.customers.values():
+            if user.getCitizenID() == citizenId:
+                return f"<script> alert(\"User already exists\"); window.history.back(); </script>"
+            if user.getUsername() == username:
+                return f"<script> alert(\"Username already exists\"); window.history.back(); </script>"
+            
+        user = UserAccount(filename, firstName, middleName, lastName, username, hashPassword, citizenId, maritalstatus, education, email, phno)
+        root.customers[user.getUsername()] = user
+        transaction.commit()
+        return RedirectResponse(url="/login", status_code=302)
+
+def verify_password(plain_password: str, hashed_password: str):
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
+
+@app.get("/login", response_class=HTMLResponse)
+async def logIn(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@app.post("/login", response_class=HTMLResponse)
+async def login_info(form_data: OAuth2PasswordRequestForm = Depends()):
+    username = form_data.username
+    password = form_data.password
+        
+    user = load_user(username)
+    
+    if not user:
+        return f"<script> alert(\"User does not exist\"); window.history.back(); </script>"
+    elif verify_password(password, user.getPassword()) == False:
+        return f"<script> alert(\"Incorrect password\"); window.history.back(); </script>"
+    
+    access_token = manager.create_access_token(data={'sub': username}, expires=timedelta(hours=1))
+    
+    response = RedirectResponse(url="/home", status_code=302)
+        
+    manager.set_cookie(response, access_token)
+    return response
+
+@app.get("/logout")
+async def logout():
+    response = RedirectResponse(url="/login", status_code=302)
+    response.delete_cookie("session", httponly=True, secure=True, samesite="lax")
+    return response
