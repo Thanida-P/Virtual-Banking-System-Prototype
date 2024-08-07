@@ -196,7 +196,7 @@ def allowed_file(filename):
 
 @app.post("/signUpSubmission", response_class=HTMLResponse)
 async def signUpSubmission(request: Request, firstName: str = Form(None), middleName: str = Form(None), lastName: str = Form(None), username: str = Form(None), maritalstatus: str = Form(None), education: str = Form(None), citizenId: str = Form(None), email: str = Form(None), phno: str = Form(None), password: str = Form(None), confirmPassword: str = Form(None), bankAccount: str = Form(None), termCheck: str = Form(None), file: UploadFile = File(None)):
-    required_params = [firstName, middleName, lastName, username, citizenId, email, phno, password, confirmPassword, bankAccount, file, maritalstatus, education]
+    required_params = [firstName, lastName, username, citizenId, email, phno, password, confirmPassword, bankAccount, file, maritalstatus, education]
     if any(param is None for param in required_params):
         return f"<script> alert(\"Please fill out all fields\"); window.history.back(); </script>"
 
