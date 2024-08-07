@@ -22,3 +22,7 @@ function reviewTransfer() {
 
     window.location.href = '/transfer/review';
 }
+var carousel = new bootstrap.Carousel('#owned_accounts', {
+    interval: false,
+    ride: false
+});
