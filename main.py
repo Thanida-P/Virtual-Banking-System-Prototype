@@ -104,4 +104,4 @@ async def withdrawReview(request: Request):
          
 @app.get("/currency-exchange", response_class=HTMLResponse)
 async def currencyExchange(request: Request):
-    return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request})
+    return templates.TemplateResponse("currencyExchange.html", {"request": request})
