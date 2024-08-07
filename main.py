@@ -9,6 +9,7 @@ from fastapi_login import LoginManager
 from fastapi.security import OAuth2PasswordRequestForm
 
 import os, base64
+import random
 import bcrypt
 
 from fastapi.security import OAuth2PasswordRequestForm
@@ -116,32 +117,49 @@ async def redirect(request: Request, user_info=Depends(manager)):
 #login
 @app.get("/", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("withdrawalReview.html", {"request": request})
+    return templates.TemplateResponse("signup.html", {"request": request})
 
 #home
 @app.get("/home", response_class=HTMLResponse)
 async def home(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("home.html", {"request": request})
 
+@app.get("/admin-home", response_class=HTMLResponse)
+async def homeAdmin(request: Request, user=Depends(manager)):
+    return templates.TemplateResponse("homeAdmin.html", {"request": request})
+
 @app.get("/transfer", response_class=HTMLResponse)
 async def transfer(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("transfer.html", {"request": request})
 
+
+#withdraw
 @app.get("/withdraw", response_class=HTMLResponse)
 async def withdraw(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("withdrawal.html", {"request": request})
 
-@app.get("/withdraw/review", response_class=HTMLResponse)
-async def withdrawReview(request: Request, user=Depends(manager)):
-    return templates.TemplateResponse("withdrawalReview.html", {"request": request})
+def generate_otp(length=6):
+    """Generate a random OTP of specified length."""
+    otp = ''.join(random.choices('0123456789', k=length))
+    return otp
+
+@app.get("/withdraw/{otp}", response_class=HTMLResponse)
+async def withdrawOtp(request: Request, otp: str, user=Depends(manager)):
+    otp = generate_otp()
+    return templates.TemplateResponse("withdrawalOtp.html", {"request": request, "otp": otp})
 
 @app.get("/transfer/review", response_class=HTMLResponse)
 async def transferReview(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("transferReview.html", {"request": request})
-         
+
+#currency exchange         
 @app.get("/currency-exchange", response_class=HTMLResponse)
 async def currencyExchange(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("currencyExchange.html", {"request": request})
+
+@app.get("/admin/currency-exchange", response_class=HTMLResponse)
+async def currencyExchangeAdmin(request: Request):
+    return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request})
 
 @app.post("/get-currency-rate/{currencyID}")
 async def getCurrencyRate(request: Request, user=Depends(manager), currencyID: str = ""):
@@ -151,6 +169,18 @@ async def getCurrencyRate(request: Request, user=Depends(manager), currencyID: s
 @app.get("/fakeAtm", response_class=HTMLResponse)
 async def fakeAtm(request: Request):
     return templates.TemplateResponse("fakeAtm.html", {"request": request})
+
+@app.get("/fakeAtm/confirmation", response_class=HTMLResponse)
+async def fakeAtmConfirmation(request: Request):
+    return templates.TemplateResponse("fakeAtmConfirmation.html", {"request": request})
+
+@app.get("/fakeAtm/success", response_class=HTMLResponse)
+async def fakeAtmSuccess(request: Request):
+    return templates.TemplateResponse("fakeAtmSuccesshtml", {"request": request})
+
+@app.get("/admin/user-management", response_class=HTMLResponse)
+async def userManagement(request: Request):
+    return templates.TemplateResponse("admin.html", {"request": request})
 
 @app.get("/signUp", response_class=HTMLResponse)
 async def signUp(request: Request):

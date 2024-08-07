@@ -51,19 +51,24 @@
                         </a>
                     </div>
                 </div>
-                <label for="withdraw-amount" id="amount-header" class="form-label">Amount</label>
+                <label for="withdraw-amount" id="amount-header" class="form-label">Information</label>
                 <div class="background-widget-bottom">
                     <div class="mb-3">
+                        <label id="input-label" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone-no" name="phone-no" placeholder="0XX-XXX-XXXX" required>
+                    </div>
+                    <div class="mb-3">
+                        <label id="input-label" class="form-label">Amount</label>
                         <input type="number" class="form-control" id="withdraw-amount" name="withdraw-amount" placeholder="0.00" min="100" max="50000" step="100" required>
                     </div>
                     <div class="mb-3 remaining-limit">
-                        <p>Remaining limit today: &#3647;50,000.00<br>Amount needs to be divisible by 100</p>
+                        <p class="limit-label">Remaining limit today: &#3647;50,000.00<br>Amount needs to be divisible by 100</p>
                     </div>
                 </div>
                 <p class="announce-label">Your previous active Withdraw Code will be automatically cancelled when you make a new request.</p>
                 <div class="button-container">
                     <a href="/home" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
-                    <button type="button" class="review-btn" id="review-button" onclick="reviewWithdrawal()">Review</button>
+                    <button type="button" class="withdraw-btn" id="withdraw-button" onclick="withdrawal()">Withdraw</button>
                 </div>
             </div>
         </form>

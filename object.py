@@ -85,8 +85,15 @@ class Transfer(Transaction):
         self.receiver = receiver
 
 class Withdraw(Transaction):
-    def __init__(self, transactionID, account, amount, fee, date, time, transferType):
+    def __init__(self, transactionID, account, amount, fee, date, time, transferType, otp):
         super().__init__(transactionID, account, amount, fee, date, time, transferType)
+        self.otp = otp
+    
+    def getOtp(self):
+        return self.otp
+    
+    def setOtp(self, otp):
+        self.otp = otp
 
 class Currency(persistent.Persistent):
     def __init__(self, currencyID, currencyname, currencyrate):

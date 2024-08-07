@@ -14,13 +14,14 @@ var carousel = new bootstrap.Carousel('#owned_accounts', {
     ride: false
 });
 
-function reviewWithdrawal() {
+function withdrawal() {
     const amount = $('#withdraw-amount').val();
-    if (amount === '' || amount === '0') {
-        alert('Please enter an amount.');
+    const phone = $('#phone-no').val();
+    if (amount === '' || amount === '0' || phone === '') {
+        alert('Please fill in all fields.');
     } else if (amount % 100 !== 0) {
         alert('Amount must be divisible by 100.');
     } else {
-        window.location.href = '/withdraw/review';
+        window.location.href = '/withdraw/otp';
     }
 }
