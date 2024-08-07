@@ -1,9 +1,16 @@
-from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
+# from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
+# from fastapi.responses import HTMLResponse, RedirectResponse
+
+# from fastapi_login import LoginManager
+# from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
-from fastapi.security import OAuth2PasswordRequestForm
+
+import os, base64
+
 import ZODB, ZODB.FileStorage
 import transaction
 import BTrees._OOBTree
@@ -15,7 +22,10 @@ import os
 class NotAuthenticatedException(Exception):
     pass
 
-SECRET = 'xxx'
+def generate_session():
+    return base64.b64encode(os.urandom(16))
+
+SECRET = generate_session()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -79,7 +89,7 @@ manager.cookie_name = "session"
 #     elif isinstance(user_info, Teacher):
 #         return RedirectResponse(url="/home_teacher", status_code=302)
  
-#login
-@app.get("/", response_class=HTMLResponse)
-async def login(request: Request):
-    return templates.TemplateResponse("currencyExchange.html", {"request": request})
+#home page
+@app.get("/home", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
