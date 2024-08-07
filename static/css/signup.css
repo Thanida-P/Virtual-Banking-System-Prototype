@@ -1,0 +1,36 @@
+*{
+    box-sizing: border-box;
+    margin: 0 ;
+    padding: 0;
+   
+    
+}
+
+body{
+    background: url("https://img.freepik.com/premium-photo/blue-digital-bank-glowing-icon-blue-tone-background-online-banking-app-transaction-concept-3d-style_117038-28413.jpg") no-repeat;
+    height: 100vh;
+    font-family: 'Open Sans', sans-serif;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: hidden;
+}
+
+
+.container{
+    border-radius: 10px;
+    background: #000000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    padding: 20px 10px;
+}
+
+button{
+    width: 100%;
+}
+
+a{
+    cursor: pointer;
+}
