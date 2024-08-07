@@ -9,6 +9,11 @@ $(document).ready(function() {
     });
 });
 
+var carousel = new bootstrap.Carousel('#owned_accounts', {
+    interval: false,
+    ride: false
+});
+
 function reviewWithdrawal() {
     const amount = $('#withdraw-amount').val();
     if (amount === '' || amount === '0') {
