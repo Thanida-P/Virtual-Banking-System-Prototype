@@ -36,17 +36,20 @@ templates = Jinja2Templates(directory="templates")
 manager = LoginManager(SECRET, token_url='/login', use_cookie=True, custom_exception=NotAuthenticatedException)
 manager.cookie_name = "session"
 
-storage = ZODB.FileStorage.FileStorage('data/bankdb.fs')
+storage = ZODB.FileStorage.FileStorage('data/bankdatabase.fs')
 db = ZODB.DB(storage)
 connection = db.open()
 root = connection.root
+
+def hash_password(password: str):
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 # #create root if it does not exist
 if not hasattr(root, "customers"):
     root.customers = BTrees.OOBTree.BTree()
 if not hasattr(root, "admin"):
     root.admin = BTrees.OOBTree.BTree()
-    user = AdminAccount("admin", "", "admin", "admin", bcrypt.hashpw(b"BankMatrixAdmin", bcrypt.gensalt()), 0, "email", "phone")
+    user = AdminAccount("admin", "", "admin", "admin", hash_password("BankMatrixAdmin"), 0, "email", "phone")
     root.admin["admin"] = user
     transaction.commit()
 if not hasattr(root, "accounts"):
@@ -129,7 +132,10 @@ async def home(request: Request, user=Depends(manager)):
 
 @app.get("/admin-home", response_class=HTMLResponse)
 async def homeAdmin(request: Request, user=Depends(manager)):
-    return templates.TemplateResponse("homeAdmin.html", {"request": request})
+    if isinstance(user, AdminAccount):
+        return templates.TemplateResponse("homeAdmin.html", {"request": request})
+    else:
+        return RedirectResponse(url="/home", status_code=302)
 
 @app.get("/transfer", response_class=HTMLResponse)
 async def transfer(request: Request, user=Depends(manager)):
@@ -188,9 +194,6 @@ async def userManagement(request: Request):
 async def signUp(request: Request):
     return templates.TemplateResponse("signup.html", {"request": request})
 
-def hash_password(password: str):
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 def allowed_file(filename):
@@ -225,6 +228,10 @@ async def signUpSubmission(request: Request, firstName: str = Form(None), middle
                 return f"<script> alert(\"User already exists\"); window.history.back(); </script>"
             if user.getUsername() == username:
                 return f"<script> alert(\"Username already exists\"); window.history.back(); </script>"
+        
+        for admin in root.admin.values():
+            if admin.getUsername() == username:
+                return f"<script> alert(\"Username already exists\"); window.history.back(); </script>"
             
         user = UserAccount(filename, firstName, middleName, lastName, username, hashPassword, citizenId, maritalstatus, education, email, phno)
         
@@ -244,6 +251,40 @@ async def signUpSubmission(request: Request, firstName: str = Form(None), middle
         transaction.commit()
         return RedirectResponse(url="/login", status_code=302)
 
+@app.get("/addAdmin", response_class=HTMLResponse)
+async def addAdmins(request: Request, user=Depends(manager)):
+    if isinstance(user, AdminAccount) and user.getAdminID() == 0:
+        return templates.TemplateResponse("add_admin.html", {"request": request})
+    if isinstance(user, AdminAccount):
+        return RedirectResponse(url="/home_admin", status_code=302)
+    return RedirectResponse(url="/home", status_code=302)
+    
+@app.post("/addAdmin", response_class=HTMLResponse)
+async def addAdmin(request: Request, firstName: str = Form(None), middleName: str = Form(None), lastName: str = Form(None), username: str = Form(None), email: str = Form(None), phno: str = Form(None), password: str = Form(None), confirmPassword: str = Form(None)):
+    required_params = [firstName, lastName, username, email, phno, password, confirmPassword]
+    if any(param is None for param in required_params):
+        return f"<script> alert(\"Please fill out all fields\"); window.history.back(); </script>"   
+    elif password != confirmPassword:
+        return f"<script> alert(\"Password does not match\"); window.history.back(); </script>"
+    else:        
+        hashPassword = hash_password(password)
+        
+        for user in root.customers.values():
+            if user.getUsername() == username:
+                return f"<script> alert(\"Username already exists\"); window.history.back(); </script>"
+        
+        for admin in root.admin.values():
+            if admin.getUsername() == username:
+                return f"<script> alert(\"Username already exists\"); window.history.back(); </script>"
+
+        adminID = random.randint(1000000000000, 99999999999999)
+        while any(adminID == admin.getAdminID() for admin in root.admin.values()):
+            adminID = random.randint(1000000000000, 99999999999999)
+           
+        user = AdminAccount(firstName, middleName, lastName, username, hashPassword, adminID, email, phno)
+        root.admin[str(user.getAdminID())] = user
+        transaction.commit()
+        return RedirectResponse(url="/login", status_code=302)
 def verify_password(plain_password: str, hashed_password: str):
     return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
@@ -265,9 +306,10 @@ async def login_info(form_data: OAuth2PasswordRequestForm = Depends()):
     
     access_token = manager.create_access_token(data={'sub': username}, expires=timedelta(hours=1))
     if isinstance(user, AdminAccount):
-        # if user.getUsername() == "admin" and user.getAdminID() == 0:
-        #     response = RedirectResponse(url="/moderator", status_code=302)
-        response = RedirectResponse(url="/admin-home ", status_code=302)
+        if user.getUsername() == "admin" and user.getAdminID() == 0:
+            response = RedirectResponse(url="/addAdmin", status_code=302)
+        else:
+            response = RedirectResponse(url="/admin-home", status_code=302)
     else:
         response = RedirectResponse(url="/home", status_code=302) 
  
