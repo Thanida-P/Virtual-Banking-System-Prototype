@@ -1,0 +1,48 @@
+{% extends "sidebar_header.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', path='css/transferReview.css') }}">
+<script type="text/javascript" src="/static/js/withdrawal.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="transfer-review-page" class="container mt-5">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3>Review Transfer</h3>
+        </div>
+        <div class="card-body">
+            <form action="/home" method="post">
+                <div class="mb-3">
+                    <div class="account-review border rounded p-3 mb-3">
+                        <h5>From Account:</h5>
+                        <p>Account Number: <strong>123456789</strong><br>Balance: <strong>&#3647;1,000.00</strong></p>
+                    </div>
+                    <div class="amount-review border rounded p-3 mb-3">
+                        <h5>To Account:</h5>
+                        <p>Bank: <strong>Bank 1</strong><br>Account Number: <strong>987654321</strong></p>
+
+                        <h5>Amount:</h5>
+                        <p><strong>&#3647;500.00</strong></p>
+
+                        <h5>Transfer Fee:</h5>
+                        <p><strong>&#3647;0.00</strong></p>
+
+                        <h5>Total Amount:</h5>
+                        <p><strong>&#3647;500.00</strong></p>
+
+                    </div>
+                </div>
+                <div class="buttons">
+                    <a href="#" class="back-btn" onclick="window.location.href='/transfer'">Back</a>
+                    <button type="submit" class="submit-btn">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

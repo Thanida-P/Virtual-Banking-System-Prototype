@@ -1,0 +1,29 @@
+.table th, .table td {
+    width: 20%;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+    margin-top: 30px;
+}
+
+.submit-btn {
+    background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(135, 124, 255, 1));
+    color: white;
+    border: none;
+    padding: 10px 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(to left, rgba(0, 210, 252, 1), rgba(135, 124, 255, 1));
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
