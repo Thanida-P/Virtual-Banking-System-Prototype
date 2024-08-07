@@ -2,10 +2,6 @@
     margin-top: 10%;
 }
 
-.remaining-limit {
-    text-align: right;
-}
-
 .buttons {
     display: flex;
     justify-content: center;
@@ -46,4 +42,14 @@
     background-image: linear-gradient(to right, rgb(96, 96, 96), #9e9d9d);
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.label, .withdraw-otp {
+    text-align: center;
+}
+
+.withdraw-otp {
+    font-size: 45px;
+    font-weight: bold;
+    margin-top: 1%;
 }
