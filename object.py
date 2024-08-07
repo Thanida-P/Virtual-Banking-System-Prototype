@@ -15,16 +15,15 @@ class AdminAccount(Account, persistent.Persistent):
         self.adminID = adminID
 
 class UserAccount(Account, persistent.Persistent):
-    def __init__(self, profilePic, firstname, middlename, lastname, username, password, maritalstatus, education):
+    def __init__(self, profilePic, firstname, middlename, lastname, username, password, citizenID, maritalstatus, education):
         Account.__init__(self, profilePic, firstname, middlename, lastname, username, password)
+        self.citizenID = citizenID
         self.maritalstatus = maritalstatus
         self.education = education
 
 class BankAccount(persistent.Persistent):
-    def __init__(self, firstname, middlename, lastname, bankID, banknumber, balance):
-        self.firstname = firstname
-        self.middlename = middlename
-        self.lastname = lastname
+    def __init__(self, account, bankID, banknumber, balance):
+        self.account = account
         self.bankID = bankID
         self.banknumber = banknumber
         self.balance = balance
@@ -32,22 +31,23 @@ class BankAccount(persistent.Persistent):
         self.currency = {}
         
 class Transaction(persistent.Persistent):
-    def __init__(self, transactionID, account, amount, date, time, transferType):
+    def __init__(self, transactionID, account, amount, fee, date, time, transferType):
         self.transactionID = transactionID
         self.account = account
         self.amount = amount
+        self.fee = fee
         self.date = date
         self.time = time
         self.transferType = transferType
 
 class Transfer(Transaction):
-    def __init__(self, transactionID, account, receiver, amount, date, time):
-        super().__init__(transactionID, account, amount, date, time)
+    def __init__(self, transactionID, account, receiver, amount, fee, date, time, transferType):
+        super().__init__(transactionID, account, amount, fee, date, time, transferType)
         self.receiver = receiver
 
 class Withdraw(Transaction):
-    def __init__(self, transactionID, account, amount, date, time):
-        super().__init__(transactionID, account, amount, date, time)
+    def __init__(self, transactionID, account, amount, fee, date, time, transferType):
+        super().__init__(transactionID, account, amount, fee, date, time, transferType)
 
 class Currency(persistent.Persistent):
     def __init__(self, currencyID, currencyname, currencyrate):
