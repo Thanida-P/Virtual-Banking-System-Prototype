@@ -82,5 +82,26 @@ manager.cookie_name = "session"
 #login
 @app.get("/", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request})
+    return templates.TemplateResponse("withdrawalReview.html", {"request": request})
 
+
+#login
+@app.get("/home", response_class=HTMLResponse)
+async def login(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
+
+@app.get("/transfer", response_class=HTMLResponse)
+async def transfer(request: Request):
+    return templates.TemplateResponse("transfer.html", {"request": request})
+
+@app.get("/withdraw", response_class=HTMLResponse)
+async def withdraw(request: Request):
+    return templates.TemplateResponse("withdrawal.html", {"request": request})
+
+@app.get("/withdraw/review", response_class=HTMLResponse)
+async def withdrawReview(request: Request):
+    return templates.TemplateResponse("withdrawalReview.html", {"request": request})
+         
+@app.get("/currency-exchange", response_class=HTMLResponse)
+async def currencyExchange(request: Request):
+    return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request})

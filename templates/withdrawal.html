@@ -7,38 +7,38 @@
 
 {% block content %}
     <div id="transfer-page" class="container mt-5">
-        <form action="/transfer" method="post">
+        <form id="transfer-form" action="/transfer" method="post">
             <div class="mb-3">
-            <label for="from" id="from-header" class="form-label">From</label>
-            <div class="background-widget-top">
-                <div id="owned_accounts" class="carousel slide small-carousel" data-bs-ride="carousel">
-                    <ol class="carousel-indicators">
-                        <li data-bs-target="#owned_accounts" data-bs-slide-to="0" class="active"></li>
-                        <li data-bs-target="#owned_accounts" data-bs-slide-to="1"></li>
-                        <li data-bs-target="#owned_accounts" data-bs-slide-to="2"></li>
-                    </ol>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="account-info">
-                                <h5>Account 1</h5>
-                                <p>Account Number: 123456789</p>
-                                <p>Balance: &#3647;1,000.00</p>
+                <label for="from" id="from-header" class="form-label">From</label>
+                <div class="background-widget-top">
+                    <div id="owned_accounts" class="carousel slide small-carousel" data-bs-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-bs-target="#owned_accounts" data-bs-slide-to="0" class="active"></li>
+                            <li data-bs-target="#owned_accounts" data-bs-slide-to="1"></li>
+                            <li data-bs-target="#owned_accounts" data-bs-slide-to="2"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="account-info">
+                                    <h5>Account 1</h5>
+                                    <p>Account Number: 123456789</p>
+                                    <p>Balance: &#3647;1,000.00</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="account-info">
-                                <h5>Account 2</h5>
-                                <p>Account Number: 987654321</p>
-                                <p>Balance: &#3647;2,500.00</p>
+                            <div class="carousel-item">
+                                <div class="account-info">
+                                    <h5>Account 2</h5>
+                                    <p>Account Number: 987654321</p>
+                                    <p>Balance: &#3647;2,500.00</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="account-info">
-                                <h5>Account 3</h5>
-                                <p>Account Number: 555666777</p>
-                                <p>Balance: &#3647;3,750.00</p>
+                            <div class="carousel-item">
+                                <div class="account-info">
+                                    <h5>Account 3</h5>
+                                    <p>Account Number: 555666777</p>
+                                    <p>Balance: &#3647;3,750.00</p>
+                                </div>
                             </div>
-                        </div>
                         </div>
                         <a class="carousel-control-prev" href="#owned_accounts" role="button" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -50,20 +50,20 @@
                         </a>
                     </div>
                 </div>
-            </div>
-            <label for="bank" id="amount-header" class="form-label">Amount</label>
-            <div class="background-widget-bottom">
-                <div class="mb-3">
-                    <input type="number" class="form-control" id="amount" name="amount" placeholder="0.00" min="100" max="50000" required>
+                <label for="amount" id="amount-header" class="form-label">Amount</label>
+                <div class="background-widget-bottom">
+                    <div class="mb-3">
+                        <input type="number" class="form-control" id="amount" name="amount" placeholder="0.00" min="100" max="50000" step="100" required>
+                    </div>
+                    <div class="mb-3 remaining-limit">
+                        <p>Remaining limit today: &#3647;50,000.00<br>Amount needs to be divisible by 100</p>
+                    </div>
                 </div>
-                <div class="mb-3" class="remaining-limit">
-                    <p>Remaining limit today:  &#3647;50,000.00<br>Amount needs to be divisible by 100</p>
+                <p class="announce-label">Your previous active Withdraw Code will be automatically cancelled when you make a new request.</p>
+                <div class="button-container">
+                    <a href="/home" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
+                    <button type="submit" class="review-btn" onclick="window.location.href='withdraw/review'" >Review</button>
                 </div>
-            </div>
-            <p class="announce-label">Your previous active Withdraw Code will be automatically cancelled when you make a new request.</p>
-            <div class="button-container">
-                <a href="/home" class="cancel-btn">Cancel</a>
-                <button type="submit" class="transfer-btn">Review</button>
             </div>
         </form>
     </div>
@@ -76,8 +76,14 @@
             $('.carousel').carousel({
                 interval: false // Disable automatic cycling
             });
+
+            $('#transfer-form').on('submit', function(event) {
+                const amount = $('#amount').val();
+                if (amount % 100 !== 0) {
+                    alert('Amount must be divisible by 100.');
+                    event.preventDefault();
+                }
+            });
         });
-
-
     </script>
 {% endblock %}
