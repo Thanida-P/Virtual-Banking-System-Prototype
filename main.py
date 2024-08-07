@@ -124,7 +124,11 @@ async def login(request: Request):
 #home
 @app.get("/home", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse("homeAdmin.html", {"request": request})
+
+@app.get("/admin-home", response_class=HTMLResponse)
+async def homeAdmin(request: Request):
+    return templates.TemplateResponse("homeAdmin.html", {"request": request})
 
 @app.get("/transfer", response_class=HTMLResponse)
 async def transfer(request: Request):
@@ -149,10 +153,15 @@ async def withdrawOtp(request: Request, otp: str):
 @app.get("/transfer/review", response_class=HTMLResponse)
 async def transferReview(request: Request):
     return templates.TemplateResponse("transferReview.html", {"request": request})
-         
+
+#currency exchange         
 @app.get("/currency-exchange", response_class=HTMLResponse)
 async def currencyExchange(request: Request):
     return templates.TemplateResponse("currencyExchange.html", {"request": request})
+
+@app.get("/admin/currency-exchange", response_class=HTMLResponse)
+async def currencyExchangeAdmin(request: Request):
+    return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request})
 
 @app.post("/get-currency-rate/{currencyID}")
 async def getCurrencyRate(request: Request, currencyID: str):
@@ -170,3 +179,7 @@ async def fakeAtmConfirmation(request: Request):
 @app.get("/fakeAtm/success", response_class=HTMLResponse)
 async def fakeAtmSuccess(request: Request):
     return templates.TemplateResponse("fakeAtmSuccesshtml", {"request": request})
+
+@app.get("/admin/user-management", response_class=HTMLResponse)
+async def userManagement(request: Request):
+    return templates.TemplateResponse("admin.html", {"request": request})

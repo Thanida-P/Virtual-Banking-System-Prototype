@@ -1,0 +1,29 @@
+{% extends "sidebar_header_admin.html" %} {%block head%} {{super()}}
+<link rel="stylesheet" href="{{url_for('static',path='css/home.css')}}" />
+{%endblock%} {%block content%}
+<div class="section_our_solution">
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="our_solution_category">
+        <div class="solution_cards_box">
+          <div class="solution_card" onclick="window.location.href='/admin/user-management'">
+            <div class="hover_color_bubble"></div>
+            <i class="bi bi-people-fill menu-icon"></i>
+            <div class="solu_title">
+              <h3>Users Management</h3>
+            </div>
+          </div>
+          <div class="solution_card me-0" onclick="window.location.href='/admin/currency-exchange'">
+            <div class="hover_color_bubble"></div>
+            <i class="bi bi-currency-exchange menu-icon"></i>
+            <div class="solu_title">
+              <h3>Currency Exchange</h3>
+            </div>
+          </div>
+            {%endblock%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
