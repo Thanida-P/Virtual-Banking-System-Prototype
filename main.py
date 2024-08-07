@@ -118,7 +118,7 @@ if not hasattr(root, "currency"):
 #login
 @app.get("/", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("withdrawalReview.html", {"request": request})
+    return templates.TemplateResponse("signup.html", {"request": request})
 
 #home
 @app.get("/home", response_class=HTMLResponse)
@@ -133,9 +133,13 @@ async def transfer(request: Request):
 async def withdraw(request: Request):
     return templates.TemplateResponse("withdrawal.html", {"request": request})
 
-@app.get("/withdraw/review", response_class=HTMLResponse)
+@app.get("/withdraw/code", response_class=HTMLResponse)
+async def withdrawCode(request: Request):
+    return templates.TemplateResponse("withdrawalCode.html", {"request": request})
+
+@app.get("/withdraw/otp", response_class=HTMLResponse)
 async def withdrawReview(request: Request):
-    return templates.TemplateResponse("withdrawalReview.html", {"request": request})
+    return templates.TemplateResponse("withdrawalOtp.html", {"request": request})
 
 @app.get("/transfer/review", response_class=HTMLResponse)
 async def transferReview(request: Request):

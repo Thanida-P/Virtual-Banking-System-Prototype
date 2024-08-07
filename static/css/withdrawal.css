@@ -45,18 +45,18 @@
     background-color: transparent;
 }
 
-.review-btn {
+.withdraw-btn {
     background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(135, 124, 255, 1));
     color: white;
     border: none;
-    padding: 10px 45px;
+    padding: 10px 30px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 2%;
+    margin-top: 1%;
     font-size: 20px;
 }
 
-.review-btn:hover {
+.withdraw-btn:hover {
     background: linear-gradient(to left, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1));
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -70,7 +70,7 @@
     padding: 10px 45px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 2%;
+    margin-top: 1%;
     font-size: 20px;
 }
 
@@ -89,7 +89,6 @@
     justify-content: center;
     gap: 2%;
 }
-
 
 #from-header,
 #amount-header {
@@ -122,14 +121,19 @@
 
 .background-widget-bottom {
     padding: 1%;
-    text-align: right;
+    text-align: left;
 }
 
 .announce-label {
-    margin-top: 30px;
+    margin-top: 1%;
     text-align: center;
+    margin-bottom: 0;
 }
 
 input {
     text-align: left;
+}
+
+.remaining-limit {
+    text-align: right;
 }
