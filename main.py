@@ -128,23 +128,30 @@ async def login(request: Request):
 #home
 @app.get("/home", response_class=HTMLResponse)
 async def home(request: Request, user=Depends(manager)):
-    return templates.TemplateResponse("home.html", {"request": request})
+    if isinstance(user, UserAccount):
+        defaultBank = user.getBankAccounts()[0]
+        balance = float(defaultBank.getBalance())
+        return templates.TemplateResponse("home.html", {"request": request, "firstname": user.getFirstName(), "balance": balance})
+    return RedirectResponse(url="/admin-home", status_code=302)
 
 @app.get("/admin-home", response_class=HTMLResponse)
 async def homeAdmin(request: Request, user=Depends(manager)):
     if isinstance(user, AdminAccount):
-        return templates.TemplateResponse("homeAdmin.html", {"request": request})
-    else:
-        return RedirectResponse(url="/home", status_code=302)
+        return templates.TemplateResponse("homeAdmin.html", {"request": request, "firstname": user.getFirstName()})
+    return RedirectResponse(url="/home", status_code=302)
 
 @app.get("/transfer", response_class=HTMLResponse)
 async def transfer(request: Request, user=Depends(manager)):
-    return templates.TemplateResponse("transfer.html", {"request": request})
+    if isinstance(user, UserAccount):
+        return templates.TemplateResponse("transfer.html", {"request": request, "firstname": user.getFirstName()})
+    return RedirectResponse(url="/admin-home", status_code=302)
 
 #withdraw
 @app.get("/withdraw", response_class=HTMLResponse)
 async def withdraw(request: Request, user=Depends(manager)):
-    return templates.TemplateResponse("withdrawal.html", {"request": request})
+    if isinstance(user, UserAccount):
+        return templates.TemplateResponse("withdrawal.html", {"request": request, "firstname": user.getFirstName()})
+    return RedirectResponse(url="/admin-home", status_code=302)
 
 def generate_otp(length=6):
     """Generate a random OTP of specified length."""
@@ -153,21 +160,29 @@ def generate_otp(length=6):
 
 @app.get("/withdraw/{otp}", response_class=HTMLResponse)
 async def withdrawOtp(request: Request, otp: str, user=Depends(manager)):
-    otp = generate_otp()
-    return templates.TemplateResponse("withdrawalOtp.html", {"request": request, "otp": otp})
+    if isinstance(user, UserAccount):
+        otp = generate_otp()
+        return templates.TemplateResponse("withdrawalOtp.html", {"request": request, "otp": otp, "firstname": user.getFirstName()})
+    return RedirectResponse(url="/admin-home", status_code=302)
 
 @app.get("/transfer/review", response_class=HTMLResponse)
 async def transferReview(request: Request, user=Depends(manager)):
-    return templates.TemplateResponse("transferReview.html", {"request": request})
+    if isinstance(user, UserAccount):
+        return templates.TemplateResponse("transferReview.html", {"request": request, "firstname": user.getFirstName()})
+    return RedirectResponse(url="/admin-home", status_code=302)
 
 #currency exchange         
 @app.get("/currency-exchange", response_class=HTMLResponse)
 async def currencyExchange(request: Request, user=Depends(manager)):
-    return templates.TemplateResponse("currencyExchange.html", {"request": request})
+    if isinstance(user, UserAccount):
+        return templates.TemplateResponse("currencyExchange.html", {"request": request, "firstname": user.getFirstName()})
+    return RedirectResponse(url="/admin-home", status_code=302)
 
 @app.get("/admin/currency-exchange", response_class=HTMLResponse)
 async def currencyExchangeAdmin(request: Request):
-    return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request})
+    if isinstance(user, AdminAccount):
+        return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request, "firstname": user.getFirstName()})
+    return RedirectResponse(url="/home", status_code=302)
 
 @app.post("/get-currency-rate/{currencyID}")
 async def getCurrencyRate(request: Request, user=Depends(manager), currencyID: str = ""):
@@ -189,6 +204,10 @@ async def fakeAtmSuccess(request: Request):
 @app.get("/admin/user-management", response_class=HTMLResponse)
 async def userManagement(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
+
+@app.get("/userInfo", response_class=HTMLResponse)
+async def userInfo(request: Request, user=Depends(manager)):
+    return templates.TemplateResponse("userprofile.html", {"request": request, "firstname": user.getFirstName()})
 
 @app.get("/signUp", response_class=HTMLResponse)
 async def signUp(request: Request):

@@ -19,6 +19,7 @@ body {
 .flex-column {
   color: #adb5bd;
   margin-top: 3%;
+  width: 100%;
 }
 
 .flex-column p {
