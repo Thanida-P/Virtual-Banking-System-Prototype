@@ -2,10 +2,6 @@
     margin-top: 80px;
 }
 
-.remaining-limit {
-    text-align: right;
-}
-
 .buttons {
     display: flex;
     justify-content: center;

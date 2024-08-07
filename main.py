@@ -101,6 +101,10 @@ async def withdraw(request: Request):
 @app.get("/withdraw/review", response_class=HTMLResponse)
 async def withdrawReview(request: Request):
     return templates.TemplateResponse("withdrawalReview.html", {"request": request})
+
+@app.get("/transfer/review", response_class=HTMLResponse)
+async def transferReview(request: Request):
+    return templates.TemplateResponse("transferReview.html", {"request": request})
          
 @app.get("/currency-exchange", response_class=HTMLResponse)
 async def currencyExchange(request: Request):

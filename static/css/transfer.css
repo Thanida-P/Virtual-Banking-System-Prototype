@@ -45,8 +45,8 @@
     background-color: transparent;
 }
 
-.transfer-btn {
-    background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1));
+.transfer-review-btn {
+    background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(135, 124, 255, 1));
     color: white;
     border: none;
     padding: 10px 45px;
@@ -56,7 +56,7 @@
     font-size: 20px;
 }
 
-.transfer-btn:hover {
+.transfer-review-btn:hover {
     background: linear-gradient(to left, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1));
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -64,7 +64,7 @@
 
 
 .cancel-btn {
-    background-image: linear-gradient(to left, rgba(135, 124, 255, 1), #f7186a);
+    background-image: linear-gradient(to left, rgb(96, 96, 96), #9e9d9d);
     color: white;
     border: none;
     padding: 10px 45px;
@@ -75,7 +75,7 @@
 }
 
 .cancel-btn:hover {
-    background-image: linear-gradient(to right, rgba(135, 124, 255, 1), #f7186a);
+    background-image: linear-gradient(to right, rgb(96, 96, 96), #9e9d9d);
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
@@ -123,5 +123,5 @@
 }
 
 input {
-    text-align: right;
+    text-align: left;
 }
