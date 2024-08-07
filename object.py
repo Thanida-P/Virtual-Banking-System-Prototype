@@ -41,13 +41,13 @@ class Transaction(persistent.Persistent):
         self.transferType = transferType
 
 class Transfer(Transaction):
-    def __init__(self, transactionID, account, receiver, amount, fee, date, time):
-        super().__init__(transactionID, account, amount, fee, date, time)
+    def __init__(self, transactionID, account, receiver, amount, fee, date, time, transferType):
+        super().__init__(transactionID, account, amount, fee, date, time, transferType)
         self.receiver = receiver
 
 class Withdraw(Transaction):
-    def __init__(self, transactionID, account, amount, fee, date, time):
-        super().__init__(transactionID, account, amount, fee, date, time)
+    def __init__(self, transactionID, account, amount, fee, date, time, transferType):
+        super().__init__(transactionID, account, amount, fee, date, time, transferType)
 
 class Currency(persistent.Persistent):
     def __init__(self, currencyID, currencyname, currencyrate):
