@@ -85,9 +85,9 @@ async def login(request: Request):
     return templates.TemplateResponse("withdrawalReview.html", {"request": request})
 
 
-#login
+#home
 @app.get("/home", response_class=HTMLResponse)
-async def login(request: Request):
+async def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
 @app.get("/transfer", response_class=HTMLResponse)
