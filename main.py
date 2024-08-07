@@ -36,7 +36,7 @@ templates = Jinja2Templates(directory="templates")
 manager = LoginManager(SECRET, token_url='/login', use_cookie=True, custom_exception=NotAuthenticatedException)
 manager.cookie_name = "session"
 
-storage = ZODB.FileStorage.FileStorage('data/bankdatabase.fs')
+storage = ZODB.FileStorage.FileStorage('data/bankdb.fs')
 db = ZODB.DB(storage)
 connection = db.open()
 root = connection.root
@@ -46,6 +46,9 @@ if not hasattr(root, "customers"):
     root.customers = BTrees.OOBTree.BTree()
 if not hasattr(root, "admin"):
     root.admin = BTrees.OOBTree.BTree()
+    user = AdminAccount("admin", "", "admin", "admin", bcrypt.hashpw(b"BankMatrixAdmin", bcrypt.gensalt()), 0, "email", "phone")
+    root.admin["admin"] = user
+    transaction.commit()
 if not hasattr(root, "accounts"):
     root.accounts = BTrees.OOBTree.BTree()
 if not hasattr(root, "transfers"):
@@ -132,7 +135,6 @@ async def homeAdmin(request: Request, user=Depends(manager)):
 async def transfer(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("transfer.html", {"request": request})
 
-
 #withdraw
 @app.get("/withdraw", response_class=HTMLResponse)
 async def withdraw(request: Request, user=Depends(manager)):
@@ -195,8 +197,8 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.post("/signUpSubmission", response_class=HTMLResponse)
-async def signUpSubmission(request: Request, firstName: str = Form(None), middleName: str = Form(None), lastName: str = Form(None), username: str = Form(None), maritalstatus: str = Form(None), education: str = Form(None), citizenId: str = Form(None), email: str = Form(None), phno: str = Form(None), password: str = Form(None), confirmPassword: str = Form(None), bankAccount: str = Form(None), termCheck: str = Form(None), file: UploadFile = File(None)):
-    required_params = [firstName, lastName, username, citizenId, email, phno, password, confirmPassword, bankAccount, file, maritalstatus, education]
+async def signUpSubmission(request: Request, firstName: str = Form(None), middleName: str = Form(None), lastName: str = Form(None), username: str = Form(None), maritalstatus: str = Form(None), education: str = Form(None), citizenId: str = Form(None), email: str = Form(None), phno: str = Form(None), password: str = Form(None), confirmPassword: str = Form(None), bankAccount: str = Form(None), termCheck: str = Form(None), file: UploadFile = File(None), accountType: str = Form(None)):
+    required_params = [firstName, lastName, username, citizenId, email, phno, password, confirmPassword, file, maritalstatus, education, accountType]
     if any(param is None for param in required_params):
         return f"<script> alert(\"Please fill out all fields\"); window.history.back(); </script>"
 
@@ -225,6 +227,19 @@ async def signUpSubmission(request: Request, firstName: str = Form(None), middle
                 return f"<script> alert(\"Username already exists\"); window.history.back(); </script>"
             
         user = UserAccount(filename, firstName, middleName, lastName, username, hashPassword, citizenId, maritalstatus, education, email, phno)
+        
+        bankID = "BMT"
+        banknumber = random.randint(1000000000000, 99999999999999)
+        while any(root.accounts[bank].getBankID() == bankID and banknumber in root.accounts[bank].getBankNumber() for bank in root.accounts.values()):
+            banknumber = random.randint(1000000000000, 99999999999999)
+        
+        currency = {}
+        for currencyID in root.currency:
+            currency[currencyID] = 0.0
+
+        intialBankAccount = BankAccount(UserAccount, accountType, bankID, banknumber, 0, currency)
+        user.addBankAccount(intialBankAccount)
+        root.accounts[bankID] = intialBankAccount
         root.customers[user.getUsername()] = user
         transaction.commit()
         return RedirectResponse(url="/login", status_code=302)
@@ -249,9 +264,13 @@ async def login_info(form_data: OAuth2PasswordRequestForm = Depends()):
         return f"<script> alert(\"Incorrect password\"); window.history.back(); </script>"
     
     access_token = manager.create_access_token(data={'sub': username}, expires=timedelta(hours=1))
-    
-    response = RedirectResponse(url="/home", status_code=302)
-        
+    if isinstance(user, AdminAccount):
+        # if user.getUsername() == "admin" and user.getAdminID() == 0:
+        #     response = RedirectResponse(url="/moderator", status_code=302)
+        response = RedirectResponse(url="/admin-home ", status_code=302)
+    else:
+        response = RedirectResponse(url="/home", status_code=302) 
+ 
     manager.set_cookie(response, access_token)
     return response
 

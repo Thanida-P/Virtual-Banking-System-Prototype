@@ -46,6 +46,7 @@ class UserAccount(Account, persistent.Persistent):
         self.citizenID = citizenID
         self.maritalstatus = maritalstatus
         self.education = education
+        self.bankAccounts = []
         
     def getProfilePicName(self):
         return self.profilePic
@@ -58,16 +59,44 @@ class UserAccount(Account, persistent.Persistent):
     
     def getEducation(self):
         return self.education
+    
+    def getBankAccounts(self):
+        return self.bankAccounts
+    
+    def addBankAccount(self, bankAccount):
+        self.bankAccounts.append(bankAccount)
 
 class BankAccount(persistent.Persistent):
-    def __init__(self, account, bankType, bankID, banknumber, balance):
+    def __init__(self, account, bankType, bankID, banknumber, balance, currency):
         self.account = account
         self.bankType = bankType
         self.bankID = bankID
         self.banknumber = banknumber
         self.balance = balance
         self.transactions = []
-        self.currency = {}
+        self.currency = currency
+        
+    def getAccount(self):
+        return self.account
+    
+    def getBankType(self):
+        return self.bankType
+    
+    def getBankID(self):
+        return self.bankID
+    
+    def getBankNumber(self):
+        return self.banknumber
+        
+    def getBalance(self):
+        return self.balance
+    
+    def getTransactions(self):
+        return self.transactions
+    
+    def getCurrency(self):
+        return self.currency
+        
         
 class Transaction(persistent.Persistent):
     def __init__(self, transactionID, account, amount, fee, date, time, transferType):
