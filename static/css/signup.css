@@ -1,12 +1,12 @@
-*{
+* {
     box-sizing: border-box;
-    margin: 0 ;
+    margin: 0;
     padding: 0;
-   
-    
+
+
 }
 
-body{
+body {
     background: url("https://img.freepik.com/premium-photo/blue-digital-bank-glowing-icon-blue-tone-background-online-banking-app-transaction-concept-3d-style_117038-28413.jpg") no-repeat;
     height: 100vh;
     font-family: 'Open Sans', sans-serif;
@@ -17,20 +17,44 @@ body{
 }
 
 
-.container{
+.container {
     border-radius: 10px;
     background: #000000;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     padding: 20px 10px;
 }
 
-button{
+button {
     width: 100%;
 }
 
-a{
+a {
     cursor: pointer;
+}
+
+.cancel-btn {
+    background-image: linear-gradient(to left, rgb(96, 96, 96), #9e9d9d);
+    border: 0;
+}
+
+.cancel-btn:hover {
+
+    background-image: linear-gradient(to right, rgb(96, 96, 96), #9e9d9d);
+}
+
+.signup-btn {
+    background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(135, 124, 255, 1));
+    border: 0;
+}
+
+.signup-btn:hover {
+    background: linear-gradient(to left, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1));
+}
+
+.show-password {
+    cursor: pointer;
+    padding-top: 5.5%;
 }

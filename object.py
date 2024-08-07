@@ -1,29 +1,68 @@
 import persistent
 
 class Account(persistent.Persistent):
-    def __init__(self, profilePic, firstname, middlename, lastname, username, password):
-        self.profilePic = profilePic
+    def __init__(self, firstname, middlename, lastname, username, password, email, phone):
         self.firstname = firstname
         self.middlename = middlename
         self.lastname = lastname
         self.username = username
         self.password = password
+        self.email = email
+        self.phone = phone
+    
+    def getFirstName(self):
+        return self.firstname
+    
+    def getMiddleName(self):
+        return self.middlename
+    
+    def getLastName(self):
+        return self.lastname
+    
+    def getUsername(self):
+        return self.username
+    
+    def getPassword(self):
+        return self.password
+    
+    def getEmail(self):
+        return self.email
+    
+    def getPhone(self):
+        return self.phone
 
 class AdminAccount(Account, persistent.Persistent):
-    def __init__(self, profilePic, firstname, middlename, lastname, username, password, adminID):
-        Account.__init__(self, profilePic, firstname, middlename, lastname, username, password)
+    def __init__(self, firstname, middlename, lastname, username, password, adminID, email, phone):
+        Account.__init__(self, firstname, middlename, lastname, username, password, email, phone)
         self.adminID = adminID
+    
+    def getAdminID(self):
+        return self.adminID
 
 class UserAccount(Account, persistent.Persistent):
-    def __init__(self, profilePic, firstname, middlename, lastname, username, password, citizenID, maritalstatus, education):
-        Account.__init__(self, profilePic, firstname, middlename, lastname, username, password)
+    def __init__(self, profilePic, firstname, middlename, lastname, username, password, citizenID, maritalstatus, education, email, phone):
+        Account.__init__(self, firstname, middlename, lastname, username, password, email, phone)
+        self.profilePic = profilePic
         self.citizenID = citizenID
         self.maritalstatus = maritalstatus
         self.education = education
+        
+    def getProfilePicName(self):
+        return self.profilePic
+    
+    def getCitizenID(self):
+        return self.citizenID
+    
+    def getMaritalStatus(self):
+        return self.maritalstatus
+    
+    def getEducation(self):
+        return self.education
 
 class BankAccount(persistent.Persistent):
-    def __init__(self, account, bankID, banknumber, balance):
+    def __init__(self, account, bankType, bankID, banknumber, balance):
         self.account = account
+        self.bankType = bankType
         self.bankID = bankID
         self.banknumber = banknumber
         self.balance = balance
