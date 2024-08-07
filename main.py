@@ -133,12 +133,8 @@ async def transfer(request: Request):
 async def withdraw(request: Request):
     return templates.TemplateResponse("withdrawal.html", {"request": request})
 
-@app.get("/withdraw/code", response_class=HTMLResponse)
-async def withdrawCode(request: Request):
-    return templates.TemplateResponse("withdrawalCode.html", {"request": request})
-
 @app.get("/withdraw/otp", response_class=HTMLResponse)
-async def withdrawReview(request: Request):
+async def withdrawOtp(request: Request):
     return templates.TemplateResponse("withdrawalOtp.html", {"request": request})
 
 @app.get("/transfer/review", response_class=HTMLResponse)
@@ -157,3 +153,11 @@ async def getCurrencyRate(request: Request, currencyID: str):
 @app.get("/fakeAtm", response_class=HTMLResponse)
 async def fakeAtm(request: Request):
     return templates.TemplateResponse("fakeAtm.html", {"request": request})
+
+@app.get("/fakeAtm/confirmation", response_class=HTMLResponse)
+async def fakeAtmConfirmation(request: Request):
+    return templates.TemplateResponse("fakeAtmConfirmation.html", {"request": request})
+
+@app.get("/fakeAtm/success", response_class=HTMLResponse)
+async def fakeAtmSuccess(request: Request):
+    return templates.TemplateResponse("fakeAtmSuccesshtml", {"request": request})
