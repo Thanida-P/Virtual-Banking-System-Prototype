@@ -2,6 +2,7 @@
 {%block head%} 
 {{super()}}
 <link rel="stylesheet" href="{{url_for('static',path='css/currencyExchangeAdmin.css')}}" />
+<script type="text/javascript" src="/static/js/currencyExchange.js"></script>
 {%endblock%} 
 {%block content%}
 <div class="container mt-5">
@@ -12,16 +13,33 @@
                     <h3>Exchange Rate</h3>
                 </div>
                 <div class="card-body">
-                    <form action="/admin/currency-exchange" method="POST">
+                    <form id="exchange-rate-form">
                         <div class="mb-3">
                             <label for="from" class="form-label">From</label>
                             <select class="form-select" id="from" name="from" required>
                                 <option value="" disabled selected>Select Currency</option>
                                 <option value="USD">USD</option>
-                                <option value="THB">THB</option>
-                                <option value="JPY">JPY</option>
                                 <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                                <option value="JPY">JPY</option>
+                                <option value="AUD">AUD</option>
+                                <option value="CAD">CAD</option>
+                                <option value="CHF">CHF</option>
                                 <option value="CNY">CNY</option>
+                                <option value="SGD">SGD</option>
+                                <option value="HKD">HKD</option>
+                                <option value="NZD">NZD</option>
+                                <option value="SEK">SEK</option>
+                                <option value="DKK">DKK</option>
+                                <option value="NOK">NOK</option>
+                                <option value="KRW">KRW</option>
+                                <option value="TWD">TWD</option>
+                                <option value="MYR">MYR</option>
+                                <option value="IDR">IDR</option>
+                                <option value="INR">INR</option>
+                                <option value="PHP">PHP</option>
+                                <option value="VND">VND</option>
+                                <option value="ZAR">ZAR</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -29,10 +47,27 @@
                             <select class="form-select" id="to" name="to" required>
                                 <option value="" disabled selected>Select Currency</option>
                                 <option value="USD">USD</option>
-                                <option value="THB">THB</option>
-                                <option value="JPY">JPY</option>
                                 <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                                <option value="JPY">JPY</option>
+                                <option value="AUD">AUD</option>
+                                <option value="CAD">CAD</option>
+                                <option value="CHF">CHF</option>
                                 <option value="CNY">CNY</option>
+                                <option value="SGD">SGD</option>
+                                <option value="HKD">HKD</option>
+                                <option value="NZD">NZD</option>
+                                <option value="SEK">SEK</option>
+                                <option value="DKK">DKK</option>
+                                <option value="NOK">NOK</option>
+                                <option value="KRW">KRW</option>
+                                <option value="TWD">TWD</option>
+                                <option value="MYR">MYR</option>
+                                <option value="IDR">IDR</option>
+                                <option value="INR">INR</option>
+                                <option value="PHP">PHP</option>
+                                <option value="VND">VND</option>
+                                <option value="ZAR">ZAR</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -63,31 +98,8 @@
                                 <th scope="col">Buy Rate</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>USD</td>
-                                <td>THB</td>
-                                <td>30.50</td>
-                                <td>29.50</td>
-                            </tr>
-                            <tr>
-                                <td>USD</td>
-                                <td>JPY</td>
-                                <td>111.00</td>
-                                <td>109.00</td>
-                            </tr>
-                            <tr>
-                                <td>USD</td>
-                                <td>EUR</td>
-                                <td>0.86</td>
-                                <td>0.84</td>
-                            </tr>
-                            <tr>
-                                <td>USD</td>
-                                <td>CNY</td>
-                                <td>6.55</td>
-                                <td>6.45</td>
-                            </tr>   
+                        <tbody id="exchange-rate-list">
+                              
                         </tbody>
                     </table>
                 </div>
@@ -95,4 +107,57 @@
         </div>
     </div>
 </div>
+<script>
+async function fetchExchangeRates() {
+    try {
+        const response = await fetch('/admin/exchange-rates');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const rates = await response.json();
+        const tableBody = document.getElementById('exchange-rate-list');
+        tableBody.innerHTML = ''; // Clear existing rows
+
+        rates.forEach(rate => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${rate.from_currency}</td>
+                <td>${rate.to_currency}</td>
+                <td>${rate.sell_rate}</td>
+                <td>${rate.buy_rate}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error fetching exchange rates:', error);
+    }
+}
+
+document.getElementById('exchange-rate-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    const formData = new FormData(event.target);
+
+    try {
+        const response = await fetch('/admin/currency-exchange', {
+            method: 'POST',
+            body: new URLSearchParams(formData)
+        });
+
+        if (response.ok) {
+            console.log('Exchange rate added successfully');
+            await fetchExchangeRates(); // Refresh the table
+            event.target.reset(); // Reset form fields
+        } else {
+            console.error('Error adding exchange rate');
+        }
+    } catch (error) {
+        console.error('Error during form submission:', error);
+    }
+});
+
+// Fetch exchange rates on page load
+document.addEventListener('DOMContentLoaded', fetchExchangeRates);
+ 
+</script>
 {%endblock%}

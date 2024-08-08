@@ -3,10 +3,13 @@
 
 # from fastapi_login import LoginManager
 from object import *
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 from fastapi import FastAPI, Request
 from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi_login import LoginManager
@@ -34,7 +37,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-manager = LoginManager(SECRET, token_url='/login', use_cookie=True, custom_exception=NotAuthenticatedException)
+manager = LoginManager(SECRET, token_url='/login', use_cookie=True)
 manager.cookie_name = "session"
 
 storage = ZODB.FileStorage.FileStorage('data/bankData.fs')
@@ -86,6 +89,19 @@ if not hasattr(root, "currency"):
     for i in range(len(currencyID)):
         root.currency[currencyID[i]] = Currency(currencyID[i], currencyName[i], currencyRate[i])
         transaction.commit()
+
+if not hasattr(root, 'exchange_rates'):
+    root.exchange_rates = BTrees.OOBTree.BTree()
+
+if hasattr(root, 'exchange_rates'):
+    for rate_id, rate in root.exchange_rates.items():
+        print(f"Rate ID: {rate_id}")
+        print(f"From: {rate.from_currency}")
+        print(f"To: {rate.to_currency}")
+        print(f"Sell Rate: {rate.sell_rate}")
+        print(f"Buy Rate: {rate.buy_rate}")
+else:
+    print("No exchange rates found.")
   
 #load user
 # @manager.user_loader()
@@ -118,7 +134,7 @@ if not hasattr(root, "currency"):
 #login
 @app.get("/", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("withdrawalReview.html", {"request": request})
+    return templates.TemplateResponse("transfer.html", {"request": request})
 
 #home
 @app.get("/home", response_class=HTMLResponse)
@@ -153,3 +169,66 @@ async def getCurrencyRate(request: Request, currencyID: str):
 @app.get("/fakeAtm", response_class=HTMLResponse)
 async def fakeAtm(request: Request):
     return templates.TemplateResponse("fakeAtm.html", {"request": request})
+
+
+#Currency Exchange Rate For Admin
+
+@app.post("/admin/currency-exchange")
+async def addCurrencyExchangeRate(
+    request: Request,
+    from_currency: str = Form(...,alias="from"),
+    to_currency: str = Form(...,alias = "to"),
+    sell_rate :float = Form(...,alias="sellRate"),
+    buy_rate: float = Form(...,alias="buyRate")
+):
+    rate = CurrencyExchangeRate(from_currency, to_currency,sell_rate, buy_rate)
+    rate_id = f"{from_currency}_{to_currency}"
+    root.exchange_rates[rate_id] = rate
+    transaction.commit()
+    logging.info(f"Added exchange rate: {rate_id} - {rate}")
+    return JSONResponse({"message": "Exchange rate added successfully!"}, status_code = 201)
+
+
+@app.post("/admin/currency-exchange")
+async def add_or_update_currency_exchange_rate(
+    request: Request,
+    from_currency: str = Form(..., alias="from"),
+    to_currency: str = Form(..., alias="to"),
+    sell_rate: float = Form(..., alias="sellRate"),
+    buy_rate: float = Form(..., alias="buyRate")
+):
+    rate_id = f"{from_currency}_{to_currency}"
+    
+   
+    if rate_id in root.exchange_rates:
+        
+        existing_rate = root.exchange_rates[rate_id]
+        existing_rate.sell_rate = sell_rate
+        existing_rate.buy_rate = buy_rate
+        message = f"Updated exchange rate: {rate_id}"
+    else:
+       
+        rate = CurrencyExchangeRate(from_currency, to_currency, sell_rate, buy_rate)
+        root.exchange_rates[rate_id] = rate
+        message = f"Added new exchange rate: {rate_id}"
+    
+    transaction.commit()
+    logging.info(message)
+    return JSONResponse({"message": message}, status_code=201)
+
+
+
+@app.get("/admin/exchange-rates",response_class=JSONResponse)
+async def get_exchange_rates():
+    rates = []
+    for rate_id, rate in root.exchange_rates.items():
+        rates.append({
+            "from_currency": rate.from_currency,
+            "to_currency": rate.to_currency,
+            "sell_rate": rate.sell_rate,
+            "buy_rate": rate.buy_rate
+        })
+
+    return rates
+
+

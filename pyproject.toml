@@ -1,0 +1,21 @@
+[project]
+name = "Virtual-Banking-System-Prototype"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Cyntra", email = "140875968+Cyntra-22@users.noreply.github.com"},
+]
+dependencies = [
+    "python-multipart>=0.0.9",
+]
+requires-python = ">=3.12"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
