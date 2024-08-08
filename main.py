@@ -1,6 +1,6 @@
 from object import *
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -118,7 +118,7 @@ async def redirect(request: Request, user_info=Depends(manager)):
     if isinstance(user_info, UserAccount):
         return RedirectResponse(url="/home", status_code=302)
     elif isinstance(user_info, AdminAccount):
-        return RedirectResponse(url="/home_admin", status_code=302)
+        return RedirectResponse(url="/admin-home", status_code=302)
  
 #login
 @app.get("/", response_class=HTMLResponse)
@@ -202,9 +202,38 @@ async def fakeAtmSuccess(request: Request):
     return templates.TemplateResponse("fakeAtmSuccesshtml", {"request": request})
 
 @app.get("/admin/user-management", response_class=HTMLResponse)
-async def userManagement(request: Request):
-    return templates.TemplateResponse("admin.html", {"request": request})
+async def userManagement(request: Request, user=Depends(manager)):
+    return templates.TemplateResponse("admin.html", {"request": request, "firstname": user.getFirstName()})
 
+@app.post("/searchAccount")
+async def searchAccount(request: Request, user=Depends(manager), searchCitizenID: str = Form(None)):
+    customer = None
+    if searchCitizenID is not None:
+        for account in root.customers:
+            if root.customers[account].getCitizenID() == searchCitizenID:
+                customer = root.customers[account]
+        #searchAccountModal
+    
+    if customer is None:
+        return {"status": "failed", "message": "User not found"}
+    
+    filename = "profile/" + customer.getUsername() + "/" + customer.getProfilePicName()
+    if customer.getMiddleName() == "":
+        fullname = customer.getFirstName() + " " + customer.getLastName()
+    else:
+        fullname = customer.getFirstName() + " " + customer.getMiddleName() + " " + customer.getLastName()
+        
+    username = customer.getUsername()
+    email = customer.getEmail()
+    phno = customer.getPhone()
+    citizenId = customer.getCitizenID()
+    marital = customer.getMaritalStatus().capitalize()
+    education = customer.getEducation().capitalize()
+    
+    # if searchCitizenID is None:
+    #     return
+    return {"status": "success", "filename": filename, "fullname": fullname, "username": username, "email": email, "phno": phno, "citizenId": citizenId, "marital": marital, "education": education}
+    
 @app.get("/userInfo", response_class=HTMLResponse)
 async def userInfo(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("userprofile.html", {"request": request, "firstname": user.getFirstName()})
@@ -234,9 +263,9 @@ async def signUpSubmission(request: Request, firstName: str = Form(None), middle
     else:
         filename = file.filename
         filedata = file.file.read()
-        if not os.path.exists(f"profile/{username}"):
-            os.makedirs(f"profile/{username}")
-        filepath = f"profile/{username}/{filename}" if username else "profile/{filename}"
+        if not os.path.exists(f"static/profile/{username}"):
+            os.makedirs(f"static/profile/{username}")
+        filepath = f"static/profile/{username}/{filename}" if username else "profile/{filename}"
         with open(filepath, "wb") as f:
             f.write(filedata)
             
@@ -256,8 +285,9 @@ async def signUpSubmission(request: Request, firstName: str = Form(None), middle
         
         bankID = "BMT"
         banknumber = random.randint(1000000000000, 99999999999999)
-        while any(root.accounts[bank].getBankID() == bankID and banknumber in root.accounts[bank].getBankNumber() for bank in root.accounts.values()):
+        while any(bank.getBankID() == bankID and banknumber == bank.getBankNumber() for bank in root.accounts.values()):
             banknumber = random.randint(1000000000000, 99999999999999)
+
         
         currency = {}
         for currencyID in root.currency:
@@ -304,6 +334,7 @@ async def addAdmin(request: Request, firstName: str = Form(None), middleName: st
         root.admin[str(user.getAdminID())] = user
         transaction.commit()
         return RedirectResponse(url="/login", status_code=302)
+
 def verify_password(plain_password: str, hashed_password: str):
     return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
