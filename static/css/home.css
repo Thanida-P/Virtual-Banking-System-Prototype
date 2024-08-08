@@ -4,53 +4,62 @@ body {
   font-family: "Noto Sans", sans-serif;
   overflow: hidden;
 }
+
 .card-bottom {
   background: rgb(70, 170, 255);
-  background: linear-gradient(
-    90deg,
-    rgba(70, 170, 255, 1) 7%,
-    rgba(0, 210, 252, 1) 35%,
-    rgba(135, 124, 255, 1) 69%
-  );
+  background: linear-gradient(90deg,
+      rgba(70, 170, 255, 1) 7%,
+      rgba(0, 210, 252, 1) 35%,
+      rgba(135, 124, 255, 1) 69%);
   border-radius: 6px;
   margin-top: 7%;
   height: 45%;
 }
+
 .flex-column {
   color: #adb5bd;
   margin-top: 3%;
+  width: 100%;
 }
+
 .flex-column p {
   letter-spacing: 1px;
 }
+
 .balance-header {
-    font-size: 2vw;
-    color: var(--white-color);
-    margin-left: 2%;
+  font-size: 2vw;
+  color: var(--white-color);
+  margin-left: 2%;
 }
+
 .balance {
-    font-size: 5vw;
-    color: var(--white-color);
+  font-size: 5vw;
+  color: var(--white-color);
 }
+
 .currency-symbol {
-    font-size: 4vw !important;
-    width: 100%;
-    margin: 0 auto;
-    margin-left: 20px;
+  font-size: 4vw !important;
+  width: 100%;
+  margin: 0 auto;
+  margin-left: 20px;
 }
+
 .section_our_solution .row {
   align-items: center;
 }
+
 .our_solution_category {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .our_solution_category .solution_cards_box {
   display: flex;
   justify-content: center;
   width: 100%;
 }
+
 .solution_cards_box .solution_card {
   flex: 0 50%;
   background: #fff;

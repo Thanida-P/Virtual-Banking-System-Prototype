@@ -1,411 +1,342 @@
-{% extends "sidebar_header.html" %}
-{%block head%}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('static',path='/css/admin.css')}}">
-{%endblock%}    
-{%block content%}
+{% extends "sidebar_header_admin.html" %} {%block head%} {{super()}}
+<link rel="stylesheet" href="{{url_for('static',path='/css/admin.css')}}" />
+<script type="text/javascript" src="/static/js/admin.js"></script>
+{%endblock%} {%block content%}
 
-<section style="background-color: #eee;">
-  <div class="container py-5">
-
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="card mb-4">
-          <div class="card-body text-center">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
-            <h5 class="my-3">John Smith</h5>
-            <p class="text-muted mb-1">Admin</p>
-            <p class="text-muted mb-4">Bangkok, Thailand</p>
-            
-          </div>
-        </div>
-        <div class="card mb-4 mb-lg-0">
-          <div class="card-body p-0">
-            <ul class="list-group list-group-flush rounded-3">
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <p class="mb-0">Date of Birth</p>
-                <p class="mb-0">22/4/1989</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <p class="mb-0">Marital Status</p>
-                <p class="mb-0">Single</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <p class="mb-0">Education</p>
-                <p class="mb-0">Graduate</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <p class="mb-0">Email</p>
-                <p class="mb-0">john345867@gmail.com</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <p class="mb-0">Citizen Id</p>
-                <p class="mb-0">MF789889</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-8">
-        <div class="card mb-4">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Full Name</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">Johnatan Smith</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Email</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">example@example.com</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Mobile</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">(098) 765-4321</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Address</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">Bangkok, Thailand</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="col-md-12">
-              <div class="input-group">
-                  <input type="search" class="form-control rounded" placeholder="Search Account No" aria-label="Search Account No" aria-describedby="search-addon" />
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#searchModal">Search</button>
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="container-modal w-50">
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <div class="col-md-12">
+        <h2 class="text-center text-light">Search Account / Search Bank Account</h2>
       </div>
     </div>
   </div>
-
-</section>
-<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="searchModalLabel">Customer Information</h5>
+  <hr class="text-light" />
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <div class="col-md-12">
+        <form>
+          <label for="searchCitizenID" class="form-label text-light"
+            >Enter Citizen ID</label
+          >
+          <div class="input-group">
+            <input
+              type="search"
+              class="form-control rounded"
+              name="searchCitizenID"
+              placeholder="Enter Citizen ID"
+              aria-label="Enter Citizen ID"
+              aria-describedby="search-addon"
+              Required
+            />
+            <button
+              type="button"
+              onclick="searchAccount()"
+              class="btn btn-outline-primary"
+              data-toggle="modal"
+              data-target="#searchAccountModal"
+            >
+              Search
+            </button>
           </div>
-          <div class="modal-body">
-              
-              <div class="row">
-                <div class="col-sm-4">
-                  <p class="mb-0">Full Name</p>
-                </div>
-                <div class="col-sm-8">
-                  <p class="text-muted mb-0">Johnatan Smith</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-4">
-                  <p class="mb-0">Date of Birth</p>
-                </div>
-                <div class="col-sm-8">
-                  <p class="text-muted mb-0">22/03/2024</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-4">
-                  <p class="mb-0">Email</p>
-                </div>
-                <div class="col-sm-8">
-                  <p class="text-muted mb-0">example@example.com</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-4">
-                  <p class="mb-0">Mobile</p>
-                </div>
-                <div class="col-sm-8">
-                  <p class="text-muted mb-0">(098) 765-4321</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-4">
-                  <p class="mb-0">Address</p>
-                </div>
-                <div class="col-sm-3">
-                  <p class="text-muted mb-0">Bangkok</p>
-                </div>
-                <div class="col-sm-3">
-                  <p class="text-muted mb-0">Latkrabang</p>
-                </div>
-                <div class="col-sm-2">
-                  <p class="text-muted mb-0">10520</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-4">
-                  <p class="mb-0">Account Type</p>
-                </div>
-                <div class="col-sm-8">
-                  <p class="text-muted mb-0">Checking Account</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-4">
-                  <p class="mb-0">Currency Type</p>
-                </div>
-                <div class="col-sm-8">
-                  <p class="text-muted mb-0">USD</p>
-                </div>
-              </div>
-              <hr>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
+        </form>
       </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <div class="col-md-12">
+        <p class="m-0 text-center text-light opacity-75"> Or </p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="col-md-12">
+        <form action="/searchBankAccount" method="post">
+          <label for="searchAccountNo" class="form-label text-light"
+            >Enter Account No</label
+          >
+          <div class="input-group">
+            <input
+              type="search"
+              class="form-control rounded"
+              name="searchAccountNo"
+              placeholder="Search Account No"
+              aria-label="Search Account No"
+              aria-describedby="search-addon"
+              Required
+            />
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-toggle="modal"
+              data-target="#searchBankModal"
+            >
+              Search
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="searchBankModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="searchModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchModalLabel">Customer Information</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 d-flex justify-content-center">
+            <img
+              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+              alt="avatar"
+              class="rounded-circle img-fluid"
+              style="width: 150px"
+            />
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Full Name</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">Johnatan Smith</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Username</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">username</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">password</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">xxxxxxx</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Email</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">example@example.com</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Phone Number</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">(098) 765-4321</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Citizen ID</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">1223455678908765</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Marital Status</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">Single</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Education</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">Primary</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Bank Account Type</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">Checking Account</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Bank ID</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">BMT</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Bank Account Number</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">123456789222</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary bg-danger border-0">
+          Delete
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary border-0"
+          data-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="searchAccountModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="searchModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchModalLabel">Customer Information</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 d-flex justify-content-center" id="accountAvatar">
+            <img
+              src=""
+              alt="avatar"
+              class="rounded-circle img-fluid"
+              style="width: 150px"
+            />
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Full Name</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0" id="accountName"></p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Username</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0" id="accountUsername"></p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">password</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0">xxxxxxx</p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Email</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0" id="accountEmail"></p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Phone Number</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0" id="accountPhno"></p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Citizen ID</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0" id="accountCitizenID"></p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Marital Status</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0" id="accountMarital"></p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Education</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0" id="accountEducation"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary bg-danger border-0" onclick="editAccount()">
+          Edit
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary border-0"
+          data-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-      
+
 {%endblock%}
-
-
-<!-- 
-
-
-<!doctype html>
-<html lang="en">
-  <head>
-  
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="../static/css/admin.css"  rel="stylesheet" >
-
-    
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
-
-   
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
-
-    <title>Login Form</title>
-  </head>
-
-<section style="background-color: #eee;">
-    <div class="container py-5">
-  
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="card mb-4">
-            <div class="card-body text-center">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                class="rounded-circle img-fluid" style="width: 150px;">
-              <h5 class="my-3">John Smith</h5>
-              <p class="text-muted mb-1">Admin</p>
-              <p class="text-muted mb-4">Bangkok, Thailand</p>
-              
-            </div>
-          </div>
-          <div class="card mb-4 mb-lg-0">
-            <div class="card-body p-0">
-              <ul class="list-group list-group-flush rounded-3">
-                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                  <i class="fas fa-globe fa-lg text-warning"></i>
-                  <p class="mb-0">https://mdbootstrap.com</p>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                  <i class="fab fa-github fa-lg text-body"></i>
-                  <p class="mb-0">mdbootstrap</p>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                  <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-                  <p class="mb-0">@mdbootstrap</p>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                  <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-                  <p class="mb-0">mdbootstrap</p>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                  <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-                  <p class="mb-0">mdbootstrap</p>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-8">
-          <div class="card mb-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Full Name</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">Johnatan Smith</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Email</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">example@example.com</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Mobile</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">(098) 765-4321</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Address</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">Bangkok, Thailand</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="col-md-12">
-                <div class="input-group">
-                    <input type="search" class="form-control rounded" placeholder="Search Account No" aria-label="Search Account No" aria-describedby="search-addon" />
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#searchModal">Search</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="searchModalLabel">Customer Information</h5>
-              </div>
-              <div class="modal-body">
-                  
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <p class="mb-0">Full Name</p>
-                    </div>
-                    <div class="col-sm-8">
-                      <p class="text-muted mb-0">Johnatan Smith</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <p class="mb-0">Date of Birth</p>
-                    </div>
-                    <div class="col-sm-8">
-                      <p class="text-muted mb-0">22/03/2024</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <p class="mb-0">Email</p>
-                    </div>
-                    <div class="col-sm-8">
-                      <p class="text-muted mb-0">example@example.com</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <p class="mb-0">Mobile</p>
-                    </div>
-                    <div class="col-sm-8">
-                      <p class="text-muted mb-0">(098) 765-4321</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <p class="mb-0">Address</p>
-                    </div>
-                    <div class="col-sm-3">
-                      <p class="text-muted mb-0">Bangkok</p>
-                    </div>
-                    <div class="col-sm-3">
-                      <p class="text-muted mb-0">Latkrabang</p>
-                    </div>
-                    <div class="col-sm-2">
-                      <p class="text-muted mb-0">10520</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <p class="mb-0">Account Type</p>
-                    </div>
-                    <div class="col-sm-8">
-                      <p class="text-muted mb-0">Checking Account</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <p class="mb-0">Currency Type</p>
-                    </div>
-                    <div class="col-sm-8">
-                      <p class="text-muted mb-0">USD</p>
-                    </div>
-                  </div>
-                  <hr>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-          </div>
-      </div>
-  </div>
-  </section>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</html>
--->
-
-
-
-
-
-

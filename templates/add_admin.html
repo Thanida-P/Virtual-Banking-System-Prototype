@@ -18,10 +18,10 @@
     href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700"
     rel="stylesheet">
 
-  <title>Sign Up Form</title>
+  <title>Add Admin Form</title>
 </head>
 <section class="container w-50 text-light">
-  <form class="row g-3 p-3" action="/signUpSubmission" method="post" enctype="multipart/form-data">
+  <form class="row g-3 p-3" action="/addAdmin" method="post" enctype="multipart/form-data">
     <div class="col-md-4">
       <label for="validationDefault01" class="form-label">First name</label>
       <input type="text" class="form-control" name="firstName" id="validationDefault01" placeholder="First Name">
@@ -34,7 +34,7 @@
       <label for="validationDefault02" class="form-label">Last name</label>
       <input type="text" class="form-control" name="lastName" id="validationDefault02" placeholder="Last Name">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-12">
       <label for="validationDefaultUsername" class="form-label">Username</label>
       <div class="input-group">
         <span class="input-group-text" id="inputGroupPrepend2">@</span>
@@ -42,25 +42,6 @@
           placeholder="Username">
       </div>
     </div>
-    </div>
-    <div class="col-md-4">
-      <label for="inputPassword4" class="form-label">MaritalStatus</label>
-      <select id="maritalstatus" class="form-select" name="maritalstatus">
-        <option value="" disabled selected>Select your marital status</option>
-        <option value="single">Single</option>
-        <option value="married">Married</option>
-        <option value="divorced">divorced</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label for="education" class="form-label">Education</label>
-      <select id="education" class="form-select" name="education">
-        <option value="" disabled selected>Select your education level</option>
-        <option value="primary">Primary</option>
-        <option value="secondary">Secondary</option>
-        <option value="tertiary">Tertiary</option>
-        <option value="unknown">Prefer not to answer</option>
-      </select>
     </div>
     <div class="col-md-6">
       <label for="inputEmail4" class="form-label">Email</label>
@@ -85,38 +66,10 @@
       <i class="bi bi-eye" onclick="showPassword(2)"></i>
     </div>
     <div class="col-md-6">
-      <label for="citizenId" class="form-label">Citizen ID</label>
-      <input type="text" class="form-control" name="citizenId" id="citizenId" placeholder="Citizen ID">
+      <button type="submit" class="btn btn-primary signup-btn">Add</button>
     </div>
     <div class="col-md-6">
-      <label for="accountType" class="form-label" >Account Type</label>
-      <select id="accountType" class="form-select" name="accountType">
-          <option value="" disabled selected>Select your account type</option>
-          <option value="checking">Checking Account</option>
-          <option value="savings">Savings Account</option>
-          <option value="business">Business Account</option>
-      </select>
-  </div>
-  <div class="col-md-12">
-      <div>
-        <label class="mr-2 mb-3">Upload your profile picture:</label>
-        <input type="file" name="file" class="form-control">
-      </div>
-      <div class="form-check mt-3">
-        <input class="form-check-input" type="checkbox" id="gridCheck" name="termCheck" value="true">
-        <label class="form-check-label" for="gridCheck">
-          <span>I have read and accept the <a
-              href="https://www.termsfeed.com/public/uploads/2021/12/sample-terms-of-service-template.pdf"
-              class="text-decoration-none" target="_blank">Terms of Service.</a></span>
-        </label>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <button type="submit" class="btn btn-primary signup-btn">Sign up</button>
-    </div>
-    <div class="col-md-6">
-      <button type="button" class="btn btn-primary cancel-btn" onclick="window.location.href='/login'">Cancel</button>
+      <button type="button" class="btn btn-primary cancel-btn" onclick="window.location.href='/logout'">Cancel</button>
     </div>
   </form>
 </section>

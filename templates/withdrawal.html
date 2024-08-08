@@ -12,58 +12,37 @@
             <div class="mb-3">
                 <label for="from" id="from-header" class="form-label">From</label>
                 <div class="background-widget-top">
-                    <div id="owned_accounts" class="carousel slide small-carousel" interval="false">
-                        <ol class="carousel-indicators">
-                            <li data-bs-target="#owned_accounts" data-bs-slide-to="0" class="active"></li>
-                            <li data-bs-target="#owned_accounts" data-bs-slide-to="1"></li>
-                            <li data-bs-target="#owned_accounts" data-bs-slide-to="2"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <div class="account-info">
-                                    <h5>Account 1</h5>
-                                    <p>Account Number: 123456789</p>
-                                    <p>Balance: &#3647;1,000.00</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="account-info">
-                                    <h5>Account 2</h5>
-                                    <p>Account Number: 987654321</p>
-                                    <p>Balance: &#3647;2,500.00</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="account-info">
-                                    <h5>Account 3</h5>
-                                    <p>Account Number: 555666777</p>
-                                    <p>Balance: &#3647;3,750.00</p>
-                                </div>
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#owned_accounts" role="button" data-bs-slide="prev">
+                    <div id="accounts" class="carousel slide small-carousel" interval="false">
+                        <ol class="carousel-indicators" id="carousel-indicators"></ol>
+                        <div class="carousel-inner" id="carousel-inner"></div>
+                        <a class="carousel-control-prev" href="#accounts" role="button" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </a>
-                        <a class="carousel-control-next" href="#owned_accounts" role="button" data-bs-slide="next">
+                        <a class="carousel-control-next" href="#accounts" role="button" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </a>
                     </div>
                 </div>
-                <label for="withdraw-amount" id="amount-header" class="form-label">Amount</label>
+                <label for="amount" id="amount-header" class="form-label">Information</label>
                 <div class="background-widget-bottom">
                     <div class="mb-3">
-                        <input type="number" class="form-control" id="withdraw-amount" name="withdraw-amount" placeholder="0.00" min="100" max="50000" step="100" required>
+                        <label id="input-label" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone-no" name="phone-no" placeholder="XXX-XXX-XXXX" required>
+                    </div>
+                    <div class="mb-3">
+                        <label id="input-label" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" placeholder="0.00" min="100" max="50000" step="100" required>
                     </div>
                     <div class="mb-3 remaining-limit">
-                        <p>Remaining limit today: &#3647;50,000.00<br>Amount needs to be divisible by 100</p>
+                        <p class="limit-label" id="remaining-limit"></p>
                     </div>
                 </div>
                 <p class="announce-label">Your previous active Withdraw Code will be automatically cancelled when you make a new request.</p>
                 <div class="button-container">
                     <a href="/home" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
-                    <button type="button" class="review-btn" id="review-button" onclick="reviewWithdrawal()">Review</button>
+                    <button type="submit" class="withdraw-btn" id="withdraw-button">Withdraw</button>
                 </div>
             </div>
         </form>
@@ -71,4 +50,5 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>displayAccount({{ accounts|tojson}});</script>
 {% endblock %}

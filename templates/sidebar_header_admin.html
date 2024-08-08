@@ -40,7 +40,7 @@
         <i class="bx bx-menu" id="header-toggle"></i>
       </div>
       <div class="welcome_message">
-        <p class="m-0"><a class="text-decoration-none text-dark" href="/userInfo">Welcome, {{firstname}}</a></p>
+        <p class="m-0">Welcome, {{firstname}}</p>
       </div>
     </header>
     <div class="l-navbar" id="nav-bar">
@@ -51,19 +51,15 @@
             <span class="nav_logo-name">BankMatrix</span>
           </a>
           <div class="nav_list">
-            <a href="/home" class="nav_link {% if request.path == '/home' %}active{% endif %}">
+            <a href="/admin-home" class="nav_link {% if request.path == '/admin-home' %}active{% endif %}">
               <i class="bi bi-house-door-fill nav_icon"></i>
               <span class="nav_name">Home</span>
             </a>
-            <a href="/transfer" class="nav_link {% if request.path == '/transfer' %}active{% endif %}">
-              <i class="bi bi-arrow-down-up nav_icon"></i>
-              <span class="nav_name">Transfer</span>
+            <a href="/admin/user-management" class="nav_link {% if request.path == '/admin/user-management' %}active{% endif %}">
+              <i class="bi bi-people-fill nav_icon"></i>
+              <span class="nav_name">Users Management</span>
             </a>
-            <a href="/withdraw" class="nav_link {% if request.path == '/withdraw' %}active{% endif %}">
-              <i class="bi bi-cash-stack nav_icon"></i>
-              <span class="nav_name">Cardless Transaction</span>
-            </a>
-            <a href="/currency-exchange" class="nav_link {% if request.path == '/currency-exchange' %}active{% endif %}">
+            <a href="/admin/currency-exchange" class="nav_link {% if request.path == '/admin/currency-exchange' %}active{% endif %}">
               <i class="bi bi-currency-exchange nav_icon"></i>
               <span class="nav_name">Currency Exchange</span>
             </a>
