@@ -36,7 +36,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-manager = LoginManager(SECRET, token_url='/login', use_cookie=True)
+manager = LoginManager(SECRET, token_url='/login', use_cookie=True, custom_exception=NotAuthenticatedException)
 manager.cookie_name = "session"
 
 storage = ZODB.FileStorage.FileStorage('data/bankdatabase.fs')
@@ -107,7 +107,7 @@ if hasattr(root, 'exchange_rates'):
         print(f"Buy Rate: {rate.buy_rate}")
 else:
     print("No exchange rates found.")
-  
+
 #load user
 @manager.user_loader()
 def load_user(username: str):
@@ -209,7 +209,7 @@ async def currencyExchange(request: Request, user=Depends(manager)):
     return RedirectResponse(url="/admin-home", status_code=302)
 
 @app.get("/admin/currency-exchange", response_class=HTMLResponse)
-async def currencyExchangeAdmin(request: Request):
+async def currencyExchangeAdmin(request: Request, user=Depends(manager)):
     if isinstance(user, AdminAccount):
         return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request, "firstname": user.getFirstName()})
     return RedirectResponse(url="/home", status_code=302)
