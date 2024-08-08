@@ -145,25 +145,4 @@ class Currency(persistent.Persistent):
     def getCurrencyRate(self):  
         return self.currencyrate
     
-# For Admin Currency Exchange
-
-class CurrencyExchangeRate(persistent.Persistent):
-    def __init__(self,from_currency, to_currency, sell_rate, buy_rate):
-        self.from_currency = from_currency
-        self.to_currency = to_currency
-        self.sell_rate = sell_rate
-        self.buy_rate = buy_rate
-
-    def getFromCurrency(self):
-        return self.from_currency
-    
-    def getToCurrency(self):
-        return self.to_currency
-    
-    def getSellRate(self):
-        return self.sell_rate
-    
-    def getBuyRate(self):
-        return self.buy_rate
-    
 
