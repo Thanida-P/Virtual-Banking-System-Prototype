@@ -9,7 +9,7 @@ $(document).ready(function() {
     });
 });
 
-var carousel = new bootstrap.Carousel('#owned_accounts', {
+var carousel = new bootstrap.Carousel('#accounts', {
     interval: false,
     ride: false
 });

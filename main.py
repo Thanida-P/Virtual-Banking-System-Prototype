@@ -150,19 +150,34 @@ async def transfer(request: Request, user=Depends(manager)):
 @app.get("/withdraw", response_class=HTMLResponse)
 async def withdraw(request: Request, user=Depends(manager)):
     if isinstance(user, UserAccount):
-        return templates.TemplateResponse("withdrawal.html", {"request": request, "firstname": user.getFirstName()})
+        accounts = {}
+        UserAccounts = user.getBankAccounts()
+        for a in UserAccounts:
+            account = {}
+            account["bankType"] = a.getBankType()
+            account["balance"] = a.getBalance()
+            account["accountNumber"] = a.getBankNumber() 
+        return templates.TemplateResponse("withdrawal.html", {"request": request, "firstname": user.getFirstName(), "accounts": accounts})
     return RedirectResponse(url="/admin-home", status_code=302)
 
 def generate_otp(length=6):
     """Generate a random OTP of specified length."""
-    otp = ''.join(random.choices('0123456789', k=length))
+    otp = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=length))
     return otp
 
-@app.get("/withdraw/{otp}", response_class=HTMLResponse)
-async def withdrawOtp(request: Request, otp: str, user=Depends(manager)):
+@app.get("/withdraw/otp", response_class=HTMLResponse)
+async def withdrawOtp(request: Request, phone: str = Form(...), accountsDict: dict = Form(...), amount: str = Form(...), user=Depends(manager)):
     if isinstance(user, UserAccount):
+        if phone != user.getPhone():
+            return f"<script> alert(\"Invalid phone number\"); window.history.back(); </script>"
+        if not accountsDict:
+            return f"<script> alert(\"Please select an account\"); window.history.back(); </script>"
+        if not amount:
+            return f"<script> alert(\"Please enter an amount\"); window.history.back(); </script>"
+        if float(amount) <= 0 or float(amount) > accountsDict["balance"]:
+            return f"<script> alert(\"Invalid amount\"); window.history.back(); </script>"
         otp = generate_otp()
-        return templates.TemplateResponse("withdrawalOtp.html", {"request": request, "otp": otp, "firstname": user.getFirstName()})
+        return templates.TemplateResponse("withdrawalOtp.html", {"request": request, "firstname": user.getFirstName(), "otp": otp})
     return RedirectResponse(url="/admin-home", status_code=302)
 
 @app.get("/transfer/review", response_class=HTMLResponse)

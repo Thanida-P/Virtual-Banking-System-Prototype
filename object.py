@@ -63,6 +63,12 @@ class UserAccount(Account, persistent.Persistent):
     def getBankAccounts(self):
         return self.bankAccounts
     
+    def getBankAccount(self, bankNumber):
+        for bankAccount in self.bankAccounts:
+            if bankAccount.getBankNumber() == bankNumber:
+                return bankAccount
+        return None
+    
     def addBankAccount(self, bankAccount):
         self.bankAccounts.append(bankAccount)
 
