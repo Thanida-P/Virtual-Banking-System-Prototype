@@ -1,0 +1,48 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+
+}
+
+body {
+    height: 100vh;
+    font-family: 'Open Sans', sans-serif;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: hidden;
+}
+
+
+.container-modal {
+    border-radius: 10px;
+    background: #000000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -70%);
+    padding: 20px 10px;
+}
+
+.modal{
+    position:fixed;
+    top:calc(50% - 300px);
+    width:500px;
+    height:650px;
+    z-index:99999;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.modal::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+
+.fade {
+    width: 100vw;
+}
