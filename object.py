@@ -168,3 +168,5 @@ class Currency(persistent.Persistent):
     
     def getCurrencyRate(self):  
         return self.currencyrate
+    
+

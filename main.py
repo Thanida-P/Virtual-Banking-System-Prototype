@@ -1,8 +1,11 @@
 from object import *
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi_login import LoginManager
@@ -91,7 +94,7 @@ if not hasattr(root, "currency"):
     for i in range(len(currencyID)):
         root.currency[currencyID[i]] = Currency(currencyID[i], currencyName[i], currencyRate[i])
         transaction.commit()
-  
+
 #load user
 @manager.user_loader()
 def load_user(username: str):
@@ -152,6 +155,7 @@ async def withdraw(request: Request, user=Depends(manager)):
             account["bankType"] = a.getBankType()
             account["balance"] = a.getBalance()
             account["accountNumber"] = a.getBankNumber() 
+            accounts[a.getBankNumber()] = account
         return templates.TemplateResponse("withdrawal.html", {"request": request, "firstname": user.getFirstName(), "accounts": accounts})
     return RedirectResponse(url="/admin-home", status_code=302)
 
@@ -161,15 +165,13 @@ def generate_otp(length=6):
     return otp
 
 @app.get("/withdraw/otp", response_class=HTMLResponse)
-async def withdrawOtp(request: Request, phone: str = Form(...), accountsDict: dict = Form(...), amount: str = Form(...), user=Depends(manager)):
+async def withdrawOtp(request: Request, phone: str = Form(...), amount: str = Form(...), accountDict: dict = Form(...), user=Depends(manager)):
     if isinstance(user, UserAccount):
         if phone != user.getPhone():
             return f"<script> alert(\"Invalid phone number\"); window.history.back(); </script>"
-        if not accountsDict:
-            return f"<script> alert(\"Please select an account\"); window.history.back(); </script>"
         if not amount:
             return f"<script> alert(\"Please enter an amount\"); window.history.back(); </script>"
-        if float(amount) <= 0 or float(amount) > accountsDict["balance"]:
+        if float(amount) <= 0 or float(amount) > accountDict["balance"]:
             return f"<script> alert(\"Invalid amount\"); window.history.back(); </script>"
         otp = generate_otp()
         return templates.TemplateResponse("withdrawalOtp.html", {"request": request, "firstname": user.getFirstName(), "otp": otp})
@@ -189,7 +191,7 @@ async def currencyExchange(request: Request, user=Depends(manager)):
     return RedirectResponse(url="/admin-home", status_code=302)
 
 @app.get("/admin/currency-exchange", response_class=HTMLResponse)
-async def currencyExchangeAdmin(request: Request):
+async def currencyExchangeAdmin(request: Request, user=Depends(manager)):
     if isinstance(user, AdminAccount):
         return templates.TemplateResponse("currencyExchangeAdmin.html", {"request": request, "firstname": user.getFirstName()})
     return RedirectResponse(url="/home", status_code=302)
