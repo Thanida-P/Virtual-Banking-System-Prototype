@@ -12,34 +12,22 @@
             <div class="mb-3">
                 <label for="from" id="from-header" class="form-label">From</label>
                 <div class="background-widget-top">
-                    <div id="owned_accounts" class="carousel slide small-carousel" interval="false">
+                    <div id="accounts" class="carousel slide small-carousel" interval="false">
                         <ol class="carousel-indicators">
-                            <li data-bs-target="#owned_accounts" data-bs-slide-to="0" class="active"></li>
-                            <li data-bs-target="#owned_accounts" data-bs-slide-to="1"></li>
-                            <li data-bs-target="#owned_accounts" data-bs-slide-to="2"></li>
+                            {% for index in range(accounts|length) %}
+                                <li data-bs-target="#accounts" data-bs-slide-to="{{ index }}" class="{% if loop.first %}active{% endif %}"></li>
+                            {% endfor %}
                         </ol>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <div class="account-info">
-                                    <h5>Account 1</h5>
-                                    <p>Account Number: 123456789</p>
-                                    <p>Balance: &#3647;1,000.00</p>
+                            {% for account in accounts %}
+                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                    <div class="account-info">
+                                        <h5>{{ account["accountType"] }}</h5>
+                                        <p>Balance: &#3647;{{ account["balance"] }}</p>
+                                        <p>Account Number: {{ account["accountNumber"] }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="account-info">
-                                    <h5>Account 2</h5>
-                                    <p>Account Number: 987654321</p>
-                                    <p>Balance: &#3647;2,500.00</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="account-info">
-                                    <h5>Account 3</h5>
-                                    <p>Account Number: 555666777</p>
-                                    <p>Balance: &#3647;3,750.00</p>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
                         <a class="carousel-control-prev" href="#owned_accounts" role="button" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -55,7 +43,7 @@
                 <div class="background-widget-bottom">
                     <div class="mb-3">
                         <label id="input-label" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phone-no" name="phone-no" placeholder="0XX-XXX-XXXX" required>
+                        <input type="tel" class="form-control" id="phone-no" name="phone-no" placeholder="XXX-XXX-XXXX" required>
                     </div>
                     <div class="mb-3">
                         <label id="input-label" class="form-label">Amount</label>
