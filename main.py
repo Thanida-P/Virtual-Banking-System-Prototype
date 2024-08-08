@@ -228,6 +228,8 @@ async def searchAccount(request: Request, user=Depends(manager), searchCitizenID
     phno = customer.getPhone()
     citizenId = customer.getCitizenID()
     marital = customer.getMaritalStatus().capitalize()
+    if customer.getEducation() == "unknown":
+        education = "Prefer not to answer"
     education = customer.getEducation().capitalize()
     
     # if searchCitizenID is None:
