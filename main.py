@@ -157,6 +157,7 @@ async def withdraw(request: Request, user=Depends(manager)):
             account["bankType"] = a.getBankType()
             account["balance"] = a.getBalance()
             account["accountNumber"] = a.getBankNumber() 
+            accounts[a.getBankNumber()] = account
         return templates.TemplateResponse("withdrawal.html", {"request": request, "firstname": user.getFirstName(), "accounts": accounts})
     return RedirectResponse(url="/admin-home", status_code=302)
 
@@ -166,15 +167,13 @@ def generate_otp(length=6):
     return otp
 
 @app.get("/withdraw/otp", response_class=HTMLResponse)
-async def withdrawOtp(request: Request, phone: str = Form(...), accountsDict: dict = Form(...), amount: str = Form(...), user=Depends(manager)):
+async def withdrawOtp(request: Request, phone: str = Form(...), amount: str = Form(...), accountDict: dict = Form(...), user=Depends(manager)):
     if isinstance(user, UserAccount):
         if phone != user.getPhone():
             return f"<script> alert(\"Invalid phone number\"); window.history.back(); </script>"
-        if not accountsDict:
-            return f"<script> alert(\"Please select an account\"); window.history.back(); </script>"
         if not amount:
             return f"<script> alert(\"Please enter an amount\"); window.history.back(); </script>"
-        if float(amount) <= 0 or float(amount) > accountsDict["balance"]:
+        if float(amount) <= 0 or float(amount) > accountDict["balance"]:
             return f"<script> alert(\"Invalid amount\"); window.history.back(); </script>"
         otp = generate_otp()
         return templates.TemplateResponse("withdrawalOtp.html", {"request": request, "firstname": user.getFirstName(), "otp": otp})
