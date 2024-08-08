@@ -119,11 +119,6 @@ async def redirect(request: Request, user_info=Depends(manager)):
         return RedirectResponse(url="/home", status_code=302)
     elif isinstance(user_info, AdminAccount):
         return RedirectResponse(url="/admin-home", status_code=302)
- 
-#login
-@app.get("/", response_class=HTMLResponse)
-async def login(request: Request):
-    return templates.TemplateResponse("signup.html", {"request": request})
 
 #home
 @app.get("/home", response_class=HTMLResponse)
@@ -221,13 +216,13 @@ async def userManagement(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("admin.html", {"request": request, "firstname": user.getFirstName()})
 
 @app.post("/searchAccount")
-async def searchAccount(request: Request, user=Depends(manager), searchCitizenID: str = Form(None)):
+async def searchAccount(request: Request, searchCitizenID: str = Form(None)):
     customer = None
     if searchCitizenID is not None:
         for account in root.customers:
             if root.customers[account].getCitizenID() == searchCitizenID:
                 customer = root.customers[account]
-        #searchAccountModal
+                break
     
     if customer is None:
         return {"status": "failed", "message": "User not found"}
@@ -251,6 +246,35 @@ async def searchAccount(request: Request, user=Depends(manager), searchCitizenID
     #     return
     return {"status": "success", "filename": filename, "fullname": fullname, "username": username, "email": email, "phno": phno, "citizenId": citizenId, "marital": marital, "education": education}
     
+@app.put("/updateAccount")
+async def updateAccount(request: Request, fullname: str = Form(None), email: str = Form(None), phno: str = Form(None), marital: str = Form(None), education: str = Form(None), citizenId: str = Form(None)):
+    for account in root.customers:
+        customer = root.customers[account]
+        if customer.getCitizenID() == citizenId:
+            if fullname is not None:
+                names = fullname.split(" ")
+                if len(names) == 2:
+                    firstname = names[0]
+                    lastname = names[1]
+                    middlename = ""
+                else:
+                    firstname = names[0]
+                    middlename = names[1]
+                    lastname = names[2]
+                customer.setMiddleName(middlename)
+                customer.setFirstName(firstname)
+                customer.setLastName(lastname)
+            if email is not None:
+                customer.setEmail(email)
+            if phno is not None:
+                customer.setPhone(phno)
+            if marital is not None:
+                customer.setMaritalStatus(marital)
+            if education is not None:
+                customer.setEducation(education)
+            break
+    transaction.commit()
+
 @app.get("/userInfo", response_class=HTMLResponse)
 async def userInfo(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("userprofile.html", {"request": request, "firstname": user.getFirstName()})

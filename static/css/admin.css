@@ -46,3 +46,7 @@ body {
 .fade {
     width: 100vw;
 }
+
+.editAccount {
+    display: none;
+}

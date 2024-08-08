@@ -7,7 +7,9 @@
   <div class="row mb-3">
     <div class="col-md-12">
       <div class="col-md-12">
-        <h2 class="text-center text-light">Search Account / Search Bank Account</h2>
+        <h2 class="text-center text-light">
+          Search Account / Search Bank Account
+        </h2>
       </div>
     </div>
   </div>
@@ -27,14 +29,12 @@
               placeholder="Enter Citizen ID"
               aria-label="Enter Citizen ID"
               aria-describedby="search-addon"
-              Required
+              required
             />
             <button
               type="button"
               onclick="searchAccount()"
               class="btn btn-outline-primary"
-              data-toggle="modal"
-              data-target="#searchAccountModal"
             >
               Search
             </button>
@@ -46,7 +46,7 @@
   <div class="row mb-3">
     <div class="col-md-12">
       <div class="col-md-12">
-        <p class="m-0 text-center text-light opacity-75"> Or </p>
+        <p class="m-0 text-center text-light opacity-75">Or</p>
       </div>
     </div>
   </div>
@@ -65,7 +65,7 @@
               placeholder="Search Account No"
               aria-label="Search Account No"
               aria-describedby="search-addon"
-              Required
+              required
             />
             <button
               type="button"
@@ -236,107 +236,183 @@
         <h5 class="modal-title" id="searchModalLabel">Customer Information</h5>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12 d-flex justify-content-center" id="accountAvatar">
-            <img
-              src=""
-              alt="avatar"
-              class="rounded-circle img-fluid"
-              style="width: 150px"
-            />
-          </div>
+        <div>
+          <form id="updateForm">
+            <div class="row">
+              <div
+                class="col-sm-12 d-flex justify-content-center"
+                id="accountAvatar"
+              >
+                <img
+                  src=""
+                  alt="avatar"
+                  class="rounded-circle img-fluid"
+                  style="width: 150px"
+                />
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-4">
+                <p class="mb-0">Full Name</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 showAccount" id="accountName"></p>
+                <input
+                  type="text"
+                  name="fullname"
+                  id="fullname"
+                  class="form-control editAccount"
+                />
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-4">
+                <p class="mb-0">Username</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0" id="accountUsername"></p>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-4">
+                <p class="mb-0">password</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0">xxxxxxx</p>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-4">
+                <p class="mb-0">Email</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 showAccount" id="accountEmail"></p>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="form-control editAccount"
+                />
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-4">
+                <p class="mb-0">Phone Number</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 showAccount" id="accountPhno"></p>
+                <input
+                  type="phno"
+                  name="phno"
+                  id="phno"
+                  class="form-control editAccount"
+                />
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-4">
+                <p class="mb-0">Citizen ID</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 showAccount" id="accountCitizenID"></p>
+                <input
+                  type="input"
+                  name="citizenId"
+                  id="citizenId"
+                  class="form-control editAccount"
+                  disabled
+                />
+                <input
+                  type="hidden"
+                  name="citizenId"
+                  id="citizenIdHidden"
+                  class="form-control editAccount"
+                />
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-4">
+                <p class="mb-0">Marital Status</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 showAccount" id="accountMarital"></p>
+                <select
+                  id="maritalstatus"
+                  class="form-select editAccount"
+                  name="maritalstatus"
+                >
+                  <option value="" disabled>Select your marital status</option>
+                  <option value="single">Single</option>
+                  <option value="married">Married</option>
+                  <option value="divorced">Divorced</option>
+                </select>
+              </div>
+            </div>
+            <hr />
+            <div class="row m-3">
+              <div class="col-sm-4">
+                <p class="mb-0">Education</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 showAccount" id="accountEducation"></p>
+                <select id="education" class="form-select editAccount" name="education">
+                  <option value="" disabled>
+                    Select your education level
+                  </option>
+                  <option value="primary">Primary</option>
+                  <option value="secondary">Secondary</option>
+                  <option value="tertiary">Tertiary</option>
+                  <option value="unknown">Prefer not to answer</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer showAccount">
+              <button
+                type="button"
+                class="btn btn-primary bg-danger border-0"
+                onclick="editAccount()"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary border-0"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+            <div class="modal-footer editAccount">
+              <button
+                type="button"
+                class="btn btn-primary border-0"
+                onclick="updateAccount()"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary border-0"
+                onclick="cancelEditAccount()"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <p class="mb-0">Full Name</p>
-          </div>
-          <div class="col-sm-8">
-            <p class="text-muted mb-0" id="accountName"></p>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <p class="mb-0">Username</p>
-          </div>
-          <div class="col-sm-8">
-            <p class="text-muted mb-0" id="accountUsername"></p>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <p class="mb-0">password</p>
-          </div>
-          <div class="col-sm-8">
-            <p class="text-muted mb-0">xxxxxxx</p>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <p class="mb-0">Email</p>
-          </div>
-          <div class="col-sm-8">
-            <p class="text-muted mb-0" id="accountEmail"></p>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <p class="mb-0">Phone Number</p>
-          </div>
-          <div class="col-sm-8">
-            <p class="text-muted mb-0" id="accountPhno"></p>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <p class="mb-0">Citizen ID</p>
-          </div>
-          <div class="col-sm-8">
-            <p class="text-muted mb-0" id="accountCitizenID"></p>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <p class="mb-0">Marital Status</p>
-          </div>
-          <div class="col-sm-8">
-            <p class="text-muted mb-0" id="accountMarital"></p>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <p class="mb-0">Education</p>
-          </div>
-          <div class="col-sm-8">
-            <p class="text-muted mb-0" id="accountEducation"></p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary bg-danger border-0" onclick="editAccount()">
-          Edit
-        </button>
-        <button
-          type="button"
-          class="btn btn-secondary border-0"
-          data-dismiss="modal"
-        >
-          Close
-        </button>
       </div>
     </div>
   </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  {%endblock%}
 </div>
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-{%endblock%}

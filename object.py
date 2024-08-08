@@ -30,6 +30,21 @@ class Account(persistent.Persistent):
     
     def getPhone(self):
         return self.phone
+    
+    def setFirstName(self, firstname):
+        self.firstname = firstname
+    
+    def setMiddleName(self, middlename):
+        self.middlename = middlename
+    
+    def setLastName(self, lastname):
+        self.lastname = lastname
+    
+    def setEmail(self, email):
+        self.email = email
+    
+    def setPhone(self, phone):
+        self.phone = phone
 
 class AdminAccount(Account, persistent.Persistent):
     def __init__(self, firstname, middlename, lastname, username, password, adminID, email, phone):
@@ -71,6 +86,15 @@ class UserAccount(Account, persistent.Persistent):
     
     def addBankAccount(self, bankAccount):
         self.bankAccounts.append(bankAccount)
+    
+    def setMaritalStatus(self, maritalstatus):
+        self.maritalstatus = maritalstatus
+    
+    def setEducation(self, education):
+        self.education = education
+    
+    def setProfilePicName(self, profilePic):
+        self.profilePic = profilePic
 
 class BankAccount(persistent.Persistent):
     def __init__(self, account, bankType, bankID, banknumber, balance, currency):
