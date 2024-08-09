@@ -2,13 +2,13 @@
 
 {% block head %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', path='css/withdrawal.css') }}">
-<script type="text/javascript" src="/static/js/withdrawal.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', path='css/transaction.css') }}">
+<script type="text/javascript" src="/static/js/transaction.js"></script>
 {% endblock %}
 
 {% block content %}
-    <div id="withdraw-page" class="container mt-5">
-        <form id="withdraw-form" action="/withdraw" method="post">
+    <div id="transaction-page" class="container mt-5">
+        <form id="transaction-form" action="/transaction" method="post">
             <div class="mb-3">
                 <label for="from" id="from-header" class="form-label">From</label>
                 <div class="background-widget-top">
@@ -25,8 +25,16 @@
                         </a>
                     </div>
                 </div>
+                </div>
                 <label for="amount" id="amount-header" class="form-label">Information</label>
                 <div class="background-widget-bottom">
+                    <div class="mb-3">
+                        <select class="form-select" id="action" name="action" required>
+                            <option value="" selected disabled hidden>Select an action</option>
+                            <option value="withdraw">Withdraw</option>
+                            <option value="deposit">Deposit</option>
+                        </select>
+                    </div>
                     <div class="mb-3">
                         <label id="input-label" class="form-label">Phone Number</label>
                         <input type="tel" class="form-control" id="phone-no" name="phone-no" placeholder="XXX-XXX-XXXX" required>
@@ -39,10 +47,10 @@
                         <p class="limit-label" id="remaining-limit"></p>
                     </div>
                 </div>
-                <p class="announce-label">Your previous active Withdraw Code will be automatically cancelled when you make a new request.</p>
+                <p class="announce-label">Your previous active Transaction Code will be automatically cancelled when you make a new request.</p>
                 <div class="button-container">
                     <a href="/home" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
-                    <button type="submit" class="withdraw-btn" id="withdraw-button">Withdraw</button>
+                    <button type="submit" class="proceed-btn" id="proceed-button">Proceed</button>
                 </div>
             </div>
         </form>

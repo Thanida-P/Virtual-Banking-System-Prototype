@@ -45,7 +45,7 @@
     background-color: transparent;
 }
 
-.withdraw-btn {
+.proceed-btn {
     background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(135, 124, 255, 1));
     color: white;
     border: none;
@@ -56,7 +56,7 @@
     font-size: 20px;
 }
 
-.withdraw-btn:hover {
+.proceed-btn:hover {
     background: linear-gradient(to left, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1));
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -80,7 +80,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-#withdraw-page {
+#transaction-page {
     --white-color: none;
 }
 

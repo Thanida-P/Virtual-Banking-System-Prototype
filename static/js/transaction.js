@@ -67,3 +67,21 @@ function displayAccount(accountDict) {
     // Refresh carousel
     carousel.refresh();
 }
+
+function selectedAccount() {
+    let accounts = document.getElementById('accounts');
+    let accountID = accounts.querySelector('.active').querySelector('.account-info').querySelector('p').innerText.split(' ')[2];
+    let balance = accounts.querySelector('.active').querySelector('.account-info').querySelector('p').innerText.split(' ')[1].split(';')[1];
+
+    
+    fetch(`/transaction`, {
+        method: 'POST',
+        body: `{"selectedAccount": "${accountID}"}`,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+    })
+}
