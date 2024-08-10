@@ -111,7 +111,7 @@ def createTransfer(db: Session, transfer: schema.TransferCreate):
 def getTransfer(db: Session, transfer_id: int):
     return db.query(models.Transfer).filter(models.Transfer.id == transfer_id).first()
 
-def updateBalance(db: Session, banknumber: str, amount: float, receiver: str, bankId: str):
+def updateBalanceTransfer(db: Session, banknumber: str, amount: float, receiver: str, bankId: str):
     account = db.query(models.BankAccount).filter(models.BankAccount.banknumber == banknumber).first()
     account.balance -= amount
     receiverAccount = db.query(models.BankAccount).filter(models.BankAccount.banknumber == receiver and models.BankAccount.bankID == bankId).first()
