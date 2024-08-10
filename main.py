@@ -156,7 +156,7 @@ async def transferReview(request: Request, transferId: str, user=Depends(manager
 async def confirmTransfer(request: schema.TransferRequest, user=Depends(manager), db: Session = Depends(get_db)):
     transfer = crud.getTransfer(db, request.transactionId)
     bankNumber = transfer.bankAccount_id
-    updated = crud.updateBalance(db, bankNumber, transfer.amount, transfer.receiver, transfer.transferBankId)
+    updated = crud.updateBalanceTransfer(db, bankNumber, transfer.amount, transfer.receiver, transfer.transferBankId)
     if updated == False:
         return JSONResponse(
             status_code=400,
