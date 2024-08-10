@@ -79,6 +79,15 @@ def deleteBankAccount(db: Session, banknumber: str):
     db.delete(account)
     db.commit()
 
+def checkBankAccount(db: Session, banknumber: str):
+    account = db.query(models.BankAccount).filter(models.BankAccount.banknumber == banknumber).first()
+    ownBank = db.query(models.BankAccount).filter(models.BankAccount.accountId == account.accountId).all()
+    
+    if len(ownBank) > 1:
+        return True
+    else:
+        return False
+
 def getBankAccount(db: Session, banknumber: str):
     return db.query(models.BankAccount).filter(models.BankAccount.banknumber == banknumber).first()
 
@@ -126,3 +135,13 @@ def deleteTransfer(db: Session, transfer_id: int):
     transfer = db.query(models.Transfer).filter(models.Transfer.id == transfer_id).first()
     db.delete(transfer)
     db.commit()
+    
+def updateBalanceTransaction(db: Session, banknumber: str, amount: float, action: str):
+    account = db.query(models.BankAccount).filter(models.BankAccount.banknumber == banknumber).first()
+    if action == "withdraw":
+        account.balance -= amount
+    elif action == "deposit":
+        account.balance += amount
+    db.commit()
+    db.refresh(account)
+    return True

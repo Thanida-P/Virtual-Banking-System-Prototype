@@ -1,27 +1,16 @@
-var carousel = new bootstrap.Carousel('#accounts', {
-    interval: false,
-    ride: false
-});
-
 function displayAccount(accountDict) {
-    let accounts = document.getElementById('accounts');
     let carouselIndicators = document.getElementById('carousel-indicators');
     let carouselInner = document.getElementById('carousel-inner');
-    let remainingLimitElement = document.getElementById('remaining-limit');
-
     let isFirst = true;
 
-    // Clear existing indicators and items
     carouselIndicators.innerHTML = '';
-    carouselInner.innerHTML = '';
+    carouselInner.innerHTML = ''; 
 
-    // Iterate over accountDict and create carousel items and indicators
     for (let key in accountDict) {
         let account = accountDict[key];
 
-        // Create carousel indicator
         let indicator = document.createElement('li');
-        indicator.setAttribute('data-bs-target', '#accounts');
+        indicator.setAttribute('data-bs-target', '#owned_accounts');
         indicator.setAttribute('data-bs-slide-to', Object.keys(accountDict).indexOf(key));
         if (isFirst) {
             indicator.classList.add('active');
@@ -53,72 +42,80 @@ function displayAccount(accountDict) {
                 break;
         }
 
-        formmattedBalance = account.balance.toFixed(2);
-
         item.innerHTML = `
             <div class="account-info">
                 <h5>${accountType}</h5>
-                <p>Balance: &#3647;${formmattedBalance}</p>
-                <p>Account Number: ${account.accountNumber}</p>
+                <p>Balance: &#3647;${account.balance}</p>
+                <p class="account-num">Account Number: ${account.accountNumber}</p>
             </div>
         `;
 
         carouselInner.appendChild(item);
     }
-
-    // Refresh carousel
-    carousel.refresh();
-}
-
-function selectedAccount() {
-    let accounts = document.getElementById('accounts');
-    let accountID = accounts.querySelector('.active').querySelector('.account-info').querySelector('p').innerText.split(' ')[2];
-    let balance = accounts.querySelector('.active').querySelector('.account-info').querySelector('p').innerText.split(' ')[1].split(';')[1];
-
-    
-    fetch(`/transaction`, {
-        method: 'POST',
-        body: `{"selectedAccount": "${accountID}"}`,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-    })
 }
 
 function generate_otp() {
-    otp = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=6));
-    document.getElementById("otp").value = otp;
-    return otp
+    return Math.random().toString(36).slice(2, 8);
 }
 
-function proceedWithraw() {
-    // Check if all fields are filled
-    let action = document.getElementById("action").value;
-    let phoneNo = document.getElementById("phone-no").value;
-    let amount = document.getElementById("amount").value;
-    let otp = document.getElementById("otp").value;
+function getAccountFromCard() {
+    const activeCarouselItem = document.querySelector('.carousel-item.active');
+    const accountNumber = activeCarouselItem.querySelector('.account-num').textContent.split(' ')[2];
 
-    if (action && phoneNo && amount) {
-        // Show the OTP modal
+    return accountNumber;
+}
+
+
+function proceed() {
+    const phoneNo = document.getElementById('phno').value;
+    const amount = document.getElementById('amount').value;
+    const action = document.getElementById('action').value;
+    const accountNumber = getAccountFromCard();
+
+    if (phoneNo && amount && action && accountNumber) {
+        // Assume the validation is successful and you have an OTP generated
+        const otp = generate_otp();
+
+        // Set the OTP in the modal
+        document.getElementById('otp').innerText = otp;
+        document.getElementById('otp').value = otp;
+
+        // Show the modal
         $('#transactionOtpModal').modal('show');
-
-        // Generate and display the OTP
-        let otp = generate_otp();
-        document.getElementById("rotp").innerHTML = otp;
-
-        // Set the OTP in the form
-        document.getElementById("otp").value = otp;
-
     } else {
-        alert("Please fill out all fields.");
+        alert("Please fill out all required fields.");
     }
 }
 
-// Handle the OK button click inside the modal
-document.getElementById("confirmOtpButton").addEventListener("click", function() {
-    // Submit the form or perform the transaction
-    document.getElementById("transaction-form").submit();
-});
+async function confirmOtp() {
+    const otp = document.getElementById('otp').value;
+    const form = document.getElementById('transaction-form');
+    const formData = new FormData(form);
+
+    const formObject = {};
+
+    formData.forEach((value, key) => {
+        formObject[key] = value;
+    });
+
+    formObject['banknumber'] = getAccountFromCard();
+    formObject['otp'] = otp;
+
+    console.log(JSON.stringify(formObject));
+
+    const response = await fetch('/transaction', {
+        method: 'POST',
+        body: JSON.stringify(formObject),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (response.ok) {
+        alert('Transaction successful!');
+        $('#transactionOtpModal').modal('hide');
+        location.reload();
+    } else {
+        alert('An error occurred. Please try again later.');
+    }
+}

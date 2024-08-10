@@ -1,8 +1,6 @@
 # from object import *
 import logging
 
-from grpc import Status
-
 logging.basicConfig(level=logging.INFO)
 
 from fastapi import FastAPI, HTTPException, Request, status
@@ -178,24 +176,38 @@ async def deleteTransfer(request: schema.TransferRequest, db: Session = Depends(
 
 #transaction
 @app.get("/transaction", response_class=HTMLResponse)
-async def transaction(request: Request, user=Depends(manager)):
+async def transaction(request: Request, user=Depends(manager), db: Session = Depends(get_db)):
     if isinstance(user, models.UserAccount):
-        accounts = {}
-        UserAccounts = user.bankAccounts
-        for a in UserAccounts:
-            account = {}
-            account["bankType"] = a.accountType
-            account["balance"] = a.balance
-            account["accountNumber"] = a.banknumber
-            accounts[a.banknumber] = account
-        return templates.TemplateResponse("transaction.html", {"request": request, "firstname": user.firstname, "accounts": accounts})
+        accounts = crud.getBankAccountsOfUser(db, user.id)
+        return templates.TemplateResponse("transaction.html", {"request": request, "firstname": user.firstname,  "accounts": accounts})
     return RedirectResponse(url="/admin-home", status_code=302)
 
-def generate_otp(length=6):
-    """Generate a random OTP of specified length."""
-    otp = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=length))
-    return otp
-
+@app.post("/transaction")
+async def transaction(request: schema.TransactionRequest, user=Depends(manager), db: Session = Depends(get_db)):
+    if isinstance(user, models.UserAccount):
+        action = request.action
+        phone = request.phno
+        amount = request.amount
+        banknumber = request.banknumber
+        
+        bankAccount = crud.getBankAccount(db, banknumber)
+        
+        if phone == user.phone and bankAccount.accountId == user.id:
+            updated = crud.updateBalanceTransaction(db, banknumber=banknumber, amount=amount, action=action)
+            if updated == False:
+                return JSONResponse(
+                    status_code=400,
+                    content={"detail": "Invalid account number"}
+                )
+            return JSONResponse(
+                status_code=201,
+                content={"detail": "Transaction successful"}
+            )
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "Invalid phone number or account number"}
+        )
+    
 # @app.get("/withdraw/otp", response_class=HTMLResponse)
 # async def withdrawOtp(request: Request, selectedAccount: str=Form(None),  , phone: str = Form(None), amount: str = Form(None), user=Depends(manager)):
 #     if isinstance(user, models.UserAccount):
@@ -347,8 +359,18 @@ async def addAccount(request: schema.AddAccountRequest, db: Session = Depends(ge
         
             
 @app.delete("/deleteBankAccount")
-def deleteBankAccount(request: Request, db: Session = Depends(get_db), banknumber: str = Form(None)):
-    crud.deleteBankAccount(db, banknumber)
+def deleteBankAccount(request: schema.DeleteBankAccountRequest, db: Session = Depends(get_db), user= Depends(manager)):
+    if crud.checkBankAccount(db, request.banknumber) == False:
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "Cannot delete bank account. Contact the bank!"}
+        )
+    else:
+        crud.deleteBankAccount(db, request.banknumber)
+        return JSONResponse(
+            status_code=200,
+            content={"detail": "Bank Account deleted"}
+        )
     
 @app.get("/userInfo", response_class=HTMLResponse)
 async def userInfo(request: Request, user=Depends(manager)):
