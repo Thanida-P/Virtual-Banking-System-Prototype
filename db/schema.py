@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from datetime import date, time
 from typing import Optional
 
 class CustomerCreate(BaseModel):
@@ -82,4 +83,22 @@ class UpdateAccountRequest(BaseModel):
 class AddAccountRequest(BaseModel):
     accountType: str
     citizenId: str
-    password: str
+    password: str    
+class TransferReviewRequest(BaseModel):
+    banknumber: str
+    banknumberReceiver: str
+    transferBankId: str
+    amount: float
+
+class TransferCreate(BaseModel):
+    banknumber: str
+    transferBankId: str
+    amount: float
+    fee: float
+    date: date
+    time: time
+    transferType: str
+    receiver: str
+
+class TransferRequest(BaseModel):
+    transactionId: int

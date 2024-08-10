@@ -71,40 +71,6 @@ def createModerator(db:Session):
         )
 
         crud.createAdmin(db, admin_user)
-        
-# if not hasattr(root, "currency"):
-#     root.currency = BTrees.OOBTree.BTree()
-#     currencyID = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "CNY", "SGD", "HKD", "NZD", "SEK", "DKK", "NOK", "KRW", "TWD", "MYR", "IDR", "INR", "PHP", "VND", "ZAR"]
-#     currencyName = ["United States Dollar", "Euro", "British Pound Sterling", "Japanese Yen", "Australian Dollar", "Canadian Dollar", "Swiss Franc", "Chinese Yuan", "Singapore Dollar", "Hong Kong Dollar", "New Zealand Dollar", "Swedish Krona", "Danish Krone", "Norwegian Krone", "South Korean Won", "New Taiwan Dollar", "Malaysian Ringgit", "Indonesian Rupiah", "Indian Rupee", "Philippine Peso", "Vietnamese Dong", "South African Rand"]
-#     currencyRate = [
-#         [35.41, 35.57],  # USD
-#         [39.00, 39.17],  # EUR
-#         [45.10, 45.25],  # GBP
-#         [0.244, 0.246],  # JPY
-#         [23.94, 24.15],  # AUD
-#         [26.50, 26.70],  # CAD
-#         [40.12, 40.32],  # CHF
-#         [4.88, 4.91],    # CNY
-#         [26.83, 27.00],  # SGD
-#         [4.54, 4.57],    # HKD
-#         [21.10, 21.20],  # NZD
-#         [3.35, 3.37],    # SEK
-#         [5.23, 5.25],    # DKK
-#         [3.26, 3.28],    # NOK
-#         [0.025, 0.026],  # KRW
-#         [1.08, 1.10],    # TWD
-#         [7.95, 8.00],    # MYR
-#         [0.002, 0.0022], # IDR
-#         [0.423, 0.425],  # INR
-#         [0.615, 0.617],  # PHP
-#         [0.0015, 0.0016],# VND
-#         [1.92, 1.95]     # ZAR
-#     ]
-
-    
-#     for i in range(len(currencyID)):
-#         root.currency[currencyID[i]] = Currency(currencyID[i], currencyName[i], currencyRate[i])
-#         transaction.commit()
 
 @manager.user_loader()
 def load_user(username: str):
@@ -150,6 +116,65 @@ async def transfer(request: Request, db: Session = Depends(get_db), user=Depends
         accounts = crud.getBankAccountsOfUser(db, user.id)
         return templates.TemplateResponse("transfer.html", {"request": request, "firstname": user.firstname,  "accounts": accounts})
     return RedirectResponse(url="/admin-home", status_code=302)
+
+@app.post("/transferReview")
+async def transferReview(request: schema.TransferReviewRequest, db: Session = Depends(get_db), user=Depends(manager)):
+    date = datetime.now().strftime("%Y-%m-%d")
+    time = datetime.now().strftime("%H:%M:%S")
+    transferSchema = schema.TransferCreate(
+        banknumber = request.banknumber,
+        transferBankId = request.transferBankId,
+        amount = request.amount,
+        fee = 0.0,
+        date = date,
+        time = time,
+        transferType = "Withdraw",
+        receiver = request.banknumberReceiver
+    )
+    
+    transfer = crud.createTransfer(db, transferSchema)
+    
+    return JSONResponse(
+        status_code=201,
+        content={"transferId": transfer.id}
+    )
+
+@app.get("/transferReview/{transferId}", response_class=HTMLResponse)
+async def transferReview(request: Request, transferId: str, user=Depends(manager), db: Session = Depends(get_db)):
+    if isinstance(user, models.UserAccount):
+        decodetransferID = (base64.b64decode(transferId.encode('utf-8'))).decode('utf-8')
+        transferID = int(decodetransferID.split("=")[1])
+        transfer = crud.getTransfer(db, transferID)
+        if transfer is None:
+            return RedirectResponse(url="/transfer", status_code=302)
+        bankAccount = crud.getBankAccount(db, transfer.bankAccount_id)
+        newBalance = float(bankAccount.balance) - float(transfer.amount)
+        return templates.TemplateResponse("transferReview.html", {"request": request, "firstname": user.firstname, "banknumber": bankAccount.banknumber, "balance": newBalance, "amount": transfer.amount, "fee": transfer.fee, "transferBankId": transfer.transferBankId, "banknumberReceiver": transfer.receiver, "totalAmount": transfer.amount})
+    return RedirectResponse(url="/admin-home", status_code=302)
+    
+@app.post("/confirmTransfer")
+async def confirmTransfer(request: schema.TransferRequest, user=Depends(manager), db: Session = Depends(get_db)):
+    transfer = crud.getTransfer(db, request.transactionId)
+    bankNumber = transfer.bankAccount_id
+    updated = crud.updateBalance(db, bankNumber, transfer.amount, transfer.receiver, transfer.transferBankId)
+    if updated == False:
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "Invalid receiver account"}
+        )
+        
+    return JSONResponse(
+        status_code=201,
+        content={"detail": "Transaction successful"}
+    )
+
+@app.delete("/removeTransfer")
+async def deleteTransfer(request: schema.TransferRequest, db: Session = Depends(get_db)):
+    crud.deleteTransfer(db, request.transactionId)
+    return JSONResponse(
+        status_code=200,
+        content={"detail": "Transaction deleted"}
+    )
 
 #transaction
 @app.get("/transaction", response_class=HTMLResponse)
@@ -233,7 +258,8 @@ async def searchAccount(request: schema.SearchAccountRequest, db: Session = Depe
     
     if request.searchAccountNo is not None:
         account = crud.getBankAccount(db, request.searchAccountNo)
-        customer = crud.getUserFromCitizenId(db, request.searchCitizenID)
+        citizenId = db.query(models.UserAccount).filter(models.UserAccount.id == account.accountId).first().citizenID
+        customer = crud.getUserFromCitizenId(db,citizenId)
 
     if customer is None:
         return {"status": "failed", "message": "User not found"}
@@ -373,9 +399,21 @@ async def signUpSubmission(request: schema.SignUpRequest, db: Session = Depends(
             content={"detail": "Password does not match"}
         )
     
+    user_exists = db.query(models.UserAccount).filter(
+        (models.UserAccount.username == request.username) | 
+        (models.UserAccount.citizenID == request.citizenId)
+    ).first() is not None
+    if user_exists:
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "User already exists"}
+        )
+    
     # Decode Base64 data
     file_data = request.file
     try:
+        if file_data.startswith('data:image/jpeg;base64,'):
+            file_data = file_data.replace('data:image/jpeg;base64,', '')
         file_data_bytes = base64.b64decode(file_data)
     except (TypeError, ValueError):
         return JSONResponse(
@@ -398,15 +436,6 @@ async def signUpSubmission(request: schema.SignUpRequest, db: Session = Depends(
             
     hashPassword = hash_password(request.password)
 
-    user_exists = db.query(models.UserAccount).filter(
-        (models.UserAccount.username == request.username) | 
-        (models.UserAccount.citizenID == request.citizenId)
-    ).first() is not None
-    if user_exists:
-        return JSONResponse(
-            status_code=400,
-            content={"detail": "User already exists"}
-        )
     
     customerSchema = schema.CustomerCreate(
         filename=filename,
@@ -447,10 +476,10 @@ async def signUpSubmission(request: schema.SignUpRequest, db: Session = Depends(
 
 @app.get("/addAdmin", response_class=HTMLResponse)
 async def addAdmins(request: Request, user=Depends(manager)):
-    if isinstance(user, models.AdminAccount) and user.id == 1:
+    if isinstance(user, models.AdminAccount) and user.username == "admin" and verify_password("BankMatrixAdmin", user.password) == True:
         return templates.TemplateResponse("add_admin.html", {"request": request})
     if isinstance(user, models.AdminAccount):
-        return RedirectResponse(url="/home_admin", status_code=302)
+        return RedirectResponse(url="/admin-home", status_code=302)
     return RedirectResponse(url="/home", status_code=302)
     
 @app.post("/addAdmin", response_class=HTMLResponse)
@@ -510,7 +539,7 @@ async def login_info(form_data: OAuth2PasswordRequestForm = Depends()):
     
     access_token = manager.create_access_token(data={'sub': username}, expires=timedelta(hours=1))
     if isinstance(user, models.AdminAccount):
-        if user.username == "admin" and user.id == 1:
+        if user.username == "admin" and password == "BankMatrixAdmin":
             response = RedirectResponse(url="/addAdmin", status_code=302)
         else:
             response = RedirectResponse(url="/admin-home", status_code=302)

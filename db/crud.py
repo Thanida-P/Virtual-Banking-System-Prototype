@@ -91,3 +91,38 @@ def getBankAccountsOfUser(db: Session, accountId: str):
         bankAccount["accountNumber"] = account.banknumber
         bankAccounts[account.banknumber] = bankAccount
     return bankAccounts
+
+def createTransfer(db: Session, transfer: schema.TransferCreate):
+    new_transfer = models.Transfer(
+        bankAccount_id = transfer.banknumber,
+        amount = transfer.amount,
+        fee = transfer.fee,
+        date = transfer.date,
+        time = transfer.time,
+        transferType = transfer.transferType,
+        transferBankId = transfer.transferBankId,
+        receiver = transfer.receiver
+    )
+    db.add(new_transfer)
+    db.commit()
+    db.refresh(new_transfer)
+    return new_transfer
+
+def getTransfer(db: Session, transfer_id: int):
+    return db.query(models.Transfer).filter(models.Transfer.id == transfer_id).first()
+
+def updateBalance(db: Session, banknumber: str, amount: float, receiver: str, bankId: str):
+    account = db.query(models.BankAccount).filter(models.BankAccount.banknumber == banknumber).first()
+    account.balance -= amount
+    receiverAccount = db.query(models.BankAccount).filter(models.BankAccount.banknumber == receiver and models.BankAccount.bankID == bankId).first()
+    if receiverAccount == None:
+        return False
+    receiverAccount.balance += amount
+    db.commit()
+    db.refresh(account)
+    return True
+
+def deleteTransfer(db: Session, transfer_id: int):
+    transfer = db.query(models.Transfer).filter(models.Transfer.id == transfer_id).first()
+    db.delete(transfer)
+    db.commit()
