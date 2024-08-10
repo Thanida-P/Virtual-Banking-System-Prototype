@@ -28,7 +28,7 @@ class AdminCreate(BaseModel):
     lastname: str
     username: str
     password: str
-    email: EmailStr
+    email: str
     phno: str
 
 class CustomerUpdate(BaseModel):
@@ -37,5 +37,32 @@ class CustomerUpdate(BaseModel):
     lastname: str
     maritalstatus: str
     education: str
+    email: str
+    phno: str
+    
+class SignUpRequest(BaseModel):
+    firstName: str
+    middleName: Optional[str] = None
+    lastName: str
+    username: str
     email: EmailStr
     phno: str
+    password: str
+    confirmPassword: str
+    citizenId: str
+    accountType: str
+    maritalstatus: str
+    education: str
+    file: str
+    termCheck: str
+    filename: str
+    
+class AddAdminRequest(BaseModel):
+    firstName: str
+    middleName: Optional[str] = None
+    lastName: str
+    username: str
+    email: EmailStr
+    phno: str
+    password: str
+    confirmPassword: str

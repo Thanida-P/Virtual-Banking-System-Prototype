@@ -4,7 +4,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi import FastAPI, Request, Form, Depends, File, UploadFile
+from fastapi import FastAPI, Request, Form, Depends, File, UploadFile, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -68,6 +68,7 @@ def createModerator(db:Session):
         admin_user = schema.AdminCreate(
             username="admin",
             firstname="admin",
+            middlename="",
             lastname="admin",
             password=hash_password("BankMatrixAdmin"),
             balance=0,
@@ -130,7 +131,7 @@ async def redirect(request: Request, user_info=Depends(manager)):
     elif isinstance(user_info, models.AdminAccount):
         return RedirectResponse(url="/admin-home", status_code=302)
 
-#home
+
 @app.get("/home", response_class=HTMLResponse)
 async def home(request: Request,  db: Session = Depends(get_db), user=Depends(manager)):
     if isinstance(user, models.UserAccount):
@@ -152,9 +153,9 @@ async def transfer(request: Request, user=Depends(manager)):
         return templates.TemplateResponse("transfer.html", {"request": request, "firstname": user.firstname})
     return RedirectResponse(url="/admin-home", status_code=302)
 
-#withdraw
+#transaction
 @app.get("/transaction", response_class=HTMLResponse)
-async def withdraw(request: Request, user=Depends(manager)):
+async def transaction(request: Request, user=Depends(manager)):
     if isinstance(user, models.UserAccount):
         accounts = {}
         UserAccounts = user.bankAccounts
@@ -283,7 +284,34 @@ async def updateAccount(request: Request,db: Session = Depends(get_db) ,fullname
     
 @app.get("/userInfo", response_class=HTMLResponse)
 async def userInfo(request: Request, user=Depends(manager)):
-    return templates.TemplateResponse("userprofile.html", {"request": request, "firstname": user.firstname})
+    if isinstance(user, models.UserAccount):
+        middlename = user.middlename
+        if middlename == "":
+            fullname = user.firstname + " " + user.lastname
+        else:
+            fullname = user.firstname + " " + user.middlename + " " + user.lastname
+        accounts = {}
+        UserAccounts = user.bankAccounts
+        for a in UserAccounts:
+            account = {}
+            account["bankType"] = a.accountType
+            account["balance"] = a.balance
+            account["accountNumber"] = a.banknumber
+            accounts[a.banknumber] = account
+        
+        return templates.TemplateResponse("userprofile.html", {
+            "request": request, 
+            "firstname": user.firstname, 
+            "fullname": fullname, 
+            "email": user.email, 
+            "phone": user.phone, 
+            "citizenId": user.citizenID, 
+            "maritalstatus": user.maritalstatus, 
+            "education": user.education, 
+            "username": user.username,
+            "accounts": accounts
+        })
+    return RedirectResponse(url="/admin-home", status_code=302)
 
 @app.get("/signUp", response_class=HTMLResponse)
 async def signUp(request: Request):
@@ -294,66 +322,86 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.post("/signUpSubmission", response_class=HTMLResponse)
-async def signUpSubmission(request: Request,db: Session = Depends(get_db), firstName: str = Form(None), middleName: str = Form(None), lastName: str = Form(None), username: str = Form(None), maritalstatus: str = Form(None), education: str = Form(None), citizenId: str = Form(None), email: str = Form(None), phno: str = Form(None), password: str = Form(None), confirmPassword: str = Form(None), bankAccount: str = Form(None), termCheck: str = Form(None), file: UploadFile = File(None), accountType: str = Form(None)):
-    required_params = [firstName, lastName, username, citizenId, email, phno, password, confirmPassword, file, maritalstatus, education, accountType]
-    if any(param is None for param in required_params):
-        return f"<script> alert(\"Please fill out all fields\"); window.history.back(); </script>"
-
-    elif termCheck != "true":
-        return f"<script> alert(\"Please check the terms and conditions\"); window.history.back(); </script>"
+@app.post("/signUpSubmission")
+async def signUpSubmission(request: schema.SignUpRequest, db: Session = Depends(get_db)):
     
-    elif password != confirmPassword:
-        return f"<script> alert(\"Password does not match\"); window.history.back(); </script>"
-    elif not allowed_file(file.filename):
-        return f"<script> alert(\"Invalid file type\"); window.history.back(); </script>"
-    else:
-        filename = file.filename
-        filedata = file.file.read()
-        if not os.path.exists(f"static/profile/{username}"):
-            os.makedirs(f"static/profile/{username}")
-        filepath = f"static/profile/{username}/{filename}" if username else "profile/{filename}"
-        with open(filepath, "wb") as f:
-            f.write(filedata)
+    if request.password != request.confirmPassword:
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "Password does not match"}
+        )
+    
+    # Decode Base64 data
+    file_data = request.file
+    try:
+        file_data_bytes = base64.b64decode(file_data)
+    except (TypeError, ValueError):
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "Invalid file data"}
+        )
+    filename = request.filename
+    if filename and not allowed_file(filename):
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "Invalid file type"}
+        )
+    
+    user_directory = f"static/profile/{request.username}"
+    os.makedirs(user_directory, exist_ok=True)
+    
+    file_path = os.path.join(user_directory, filename)
+    with open(file_path, "wb") as f:
+        f.write(file_data_bytes)
             
-        hashPassword = hash_password(password)
+    hashPassword = hash_password(request.password)
 
-        user_exists = db.query(models.UserAccount).filter(models.UserAccount.username == username).first() is not None or db.query(models.AdminAccount).filter(models.AdminAccount.username == username).first() is not None or db.query(models.UserAccount).filter(models.UserAccount.citizenID == citizenId).first() is not None
-        if user_exists:
-            return f"<script> alert(\"User already exists\"); window.history.back(); </script>"
-                
-        customerSchema = schema.CustomerCreate(
-            filename = filename,
-            firstname = firstName,
-            middlename = middleName,
-            lastname = lastName,
-            username = username,
-            maritalstatus = maritalstatus,
-            education = education,
-            citizenId = citizenId,
-            email = email,
-            phno = phno,
-            password = hashPassword,
-            accountType = accountType
+    user_exists = db.query(models.UserAccount).filter(
+        (models.UserAccount.username == request.username) | 
+        (models.UserAccount.citizenID == request.citizenId)
+    ).first() is not None
+    if user_exists:
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "User already exists"}
         )
-        
-        new_user = crud.createCustomer(db, customerSchema)
-                
-        bankID = "BMT"
-        banknumber = random.randint(1000000000000, 99999999999999)
-        while db.query(models.BankAccount).filter_by(bankID=bankID, banknumber=banknumber).first():
-            banknumber = random.randint(1000000000000, 99999999999999)
+    
+    customerSchema = schema.CustomerCreate(
+        filename=filename,
+        firstname=request.firstName,
+        middlename=request.middleName,
+        lastname=request.lastName,
+        username=request.username,
+        maritalstatus=request.maritalstatus,
+        education=request.education,
+        citizenId=request.citizenId,
+        email=request.email,
+        phno=request.phno,
+        password=hashPassword,
+        accountType=request.accountType
+    )
 
-        bankSchema = schema.BankAccountCreate(
-            accountId= new_user.id,
-            accountType= accountType,
-            bankID= bankID,
-            banknumber= banknumber,
-            balance= 1000.0
-        )
-        
-        crud.createBankAccount(db, bankSchema)
-        return RedirectResponse(url="/login", status_code=302)
+    
+    new_user = crud.createCustomer(db, customerSchema)
+
+    bankID = "BMT"
+    banknumber = str(random.randint(1000000000000, 99999999999999))
+    while db.query(models.BankAccount).filter_by(bankID=bankID, banknumber=banknumber).first():
+        banknumber = str(random.randint(1000000000000, 99999999999999))
+
+    bankSchema = schema.BankAccountCreate(
+        accountId=new_user.id,
+        accountType=request.accountType,
+        bankID=bankID,
+        banknumber=banknumber,
+        balance=1000.0
+    )
+
+    crud.createBankAccount(db, bankSchema)
+    return JSONResponse(
+        status_code=201,
+        content={"detail": "Account created successfully!"}
+    )
 
 @app.get("/addAdmin", response_class=HTMLResponse)
 async def addAdmins(request: Request, user=Depends(manager)):
