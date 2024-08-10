@@ -20,7 +20,8 @@ async function addAdmin() {
     if (response.ok) {
         alert('Admin added successfully!');
         form.reset();
+        window.location.href = '/login';
     } else {
-        alert('Failed to add admin');
+        alert('Please enter all required fields');
     }
 }

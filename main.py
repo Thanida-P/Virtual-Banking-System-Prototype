@@ -426,7 +426,16 @@ async def addAdmins(request: Request, user=Depends(manager)):
     return RedirectResponse(url="/home", status_code=302)
     
 @app.post("/addAdmin", response_class=HTMLResponse)
-async def addAdmin(request: Request, db: Session = Depends(get_db), firstName: str = Form(None), middleName: str = Form(None), lastName: str = Form(None), username: str = Form(None), email: str = Form(None), phno: str = Form(None), password: str = Form(None), confirmPassword: str = Form(None)):
+async def addAdmin(request: schema.AddAdminRequest, db: Session = Depends(get_db)):
+    firstName = request.firstName
+    middleName = request.middleName
+    lastName = request.lastName
+    username = request.username
+    email = request.email
+    phno = request.phno
+    password = request.password
+    confirmPassword = request.confirmPassword
+    
     required_params = [firstName, lastName, username, email, phno, password, confirmPassword]
     if any(param is None for param in required_params):
         return f"<script> alert(\"Please fill out all fields\"); window.history.back(); </script>"   
