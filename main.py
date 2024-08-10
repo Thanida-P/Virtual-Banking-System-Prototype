@@ -1,9 +1,11 @@
 # from object import *
 import logging
 
+from grpc import Status
+
 logging.basicConfig(level=logging.INFO)
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi import FastAPI, Request, Form, Depends, File, UploadFile, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -109,6 +111,9 @@ def load_user(username: str):
     db =  next(get_db())
     user = crud.getUser(db, username) 
     return user
+
+def verify_password(plain_password: str, hashed_password: str):
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
 #check if the user is login
 @app.exception_handler(NotAuthenticatedException)
@@ -291,7 +296,30 @@ async def updateAccount(request: schema.UpdateAccountRequest, db: Session = Depe
     )
 
     crud.updateCustomer(db, request.citizenId, data)
+    
+@app.get("/addAccount", response_class=HTMLResponse)
+async def addAccount(request: Request, user=Depends(manager)):
+    return templates.TemplateResponse("addAccount.html", {"request": request, "firstname": user.firstname})
    
+@app.post("/addAccount")
+async def addAccount(request: schema.AddAccountRequest, db: Session = Depends(get_db), user=Depends(manager)):
+    if request.citizenId == user.citizenID and verify_password(request.password, user.password):
+        bankID = "BMT"
+        banknumber = str(random.randint(1000000000000, 99999999999999))
+        while db.query(models.BankAccount).filter_by(bankID=bankID, banknumber=banknumber).first():
+            banknumber = str(random.randint(1000000000000, 99999999999999))
+
+        bankSchema = schema.BankAccountCreate(
+            accountId=user.id,
+            accountType=request.accountType,
+            bankID=bankID,
+            banknumber=banknumber,
+            balance=1000.0
+        )
+        crud.createBankAccount(db, bankSchema)
+        return RedirectResponse(url="/home", status_code=302)
+        
+            
 @app.delete("/deleteBankAccount")
 def deleteBankAccount(request: Request, db: Session = Depends(get_db), banknumber: str = Form(None)):
     crud.deleteBankAccount(db, banknumber)
@@ -462,9 +490,6 @@ async def addAdmin(request: schema.AddAdminRequest, db: Session = Depends(get_db
         crud.createAdmin(db, adminSchema)
            
         return RedirectResponse(url="/login", status_code=302)
-
-def verify_password(plain_password: str, hashed_password: str):
-    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
 @app.get("/login", response_class=HTMLResponse)
 async def logIn(request: Request, db: Session = Depends(get_db)):
