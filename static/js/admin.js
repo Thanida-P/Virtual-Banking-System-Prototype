@@ -190,7 +190,7 @@ function deleteBankAccount() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ banknumber: bankId })
+        body: JSON.stringify({ banknumber: banknumber })
     }).then(response => {
         if (response.ok) {
             alert('Bank account deleted successfully!');

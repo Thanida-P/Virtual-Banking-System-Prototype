@@ -162,3 +162,14 @@ body {
   font-weight: bolder;
   margin-left: 35%;
 }
+
+.center-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.solution_cards_box {
+  justify-content: center !important;
+  margin-top: 10%;
+}

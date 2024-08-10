@@ -83,7 +83,15 @@ class UpdateAccountRequest(BaseModel):
 class AddAccountRequest(BaseModel):
     accountType: str
     citizenId: str
-    password: str    
+    password: str
+    
+class TransactionRequest(BaseModel):
+    action: str
+    phno: str
+    amount: float
+    banknumber: str
+    otp: str
+    
 class TransferReviewRequest(BaseModel):
     banknumber: str
     banknumberReceiver: str
@@ -102,3 +110,6 @@ class TransferCreate(BaseModel):
 
 class TransferRequest(BaseModel):
     transactionId: int
+    
+class DeleteBankAccountRequest(BaseModel):
+    banknumber: str
