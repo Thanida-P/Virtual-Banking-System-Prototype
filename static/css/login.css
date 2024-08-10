@@ -139,8 +139,12 @@ p {
 .login-btn {
   background: linear-gradient(to right, rgba(0, 210, 252, 1), rgba(135, 124, 255, 1)) !important;
   border: 0 !important;
+  color: white !important;
+  font-size: 18px !important;
+  font-weight: bolder !important;
 }
 
 .login-btn:hover {
+  color: #000000 !important;
   background: linear-gradient(to left, rgba(0, 210, 252, 1), rgba(70, 170, 255, 1)) !important;
 }

@@ -10,6 +10,9 @@ def getUser(db: Session, username: str):
     
     return user
 
+def getUserFromCitizenId(db: Session, citizenId: str):
+    return db.query(models.UserAccount).filter(models.UserAccount.citizenID == citizenId).first()
+
 def createCustomer(db: Session, customer: schema.CustomerCreate):
     new_user = models.UserAccount(
         profilePic=customer.filename,
@@ -71,13 +74,20 @@ def updateCustomer(db: Session, citizenId: str, updatingData: schema.CustomerUpd
         
         db.commit()
         
+def deleteBankAccount(db: Session, banknumber: str):
+    account = db.query(models.BankAccount).filter(models.BankAccount.banknumber == banknumber).first()
+    db.delete(account)
+    db.commit()
+
+def getBankAccount(db: Session, banknumber: str):
+    return db.query(models.BankAccount).filter(models.BankAccount.banknumber == banknumber).first()
+
 def getBankAccountsOfUser(db: Session, accountId: str):
     bankAccounts = {}
     for account in db.query(models.BankAccount).filter(models.BankAccount.accountId == accountId).all():
         bankAccount = {}
-        bankAccounts["bankType"] = account.accountType
-        bankAccounts["balance"] = account.balance
-        bankAccounts["accountNumber"] = account.banknumber
+        bankAccount["bankType"] = account.accountType
+        bankAccount["balance"] = account.balance
+        bankAccount["accountNumber"] = account.banknumber
         bankAccounts[account.banknumber] = bankAccount
     return bankAccounts
-        

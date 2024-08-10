@@ -8,48 +8,21 @@
 
 {% block content %}
     <div id="transfer-page" class="container mt-5">
-        <form action="/transfer" method="post">
+        <form>
             <div class="mb-3">
             <label for="from" id="from-header" class="form-label">From</label>
             <div class="background-widget-top">
                 <div id="owned_accounts" class="carousel slide small-carousel" interval="false">
-                    <ol class="carousel-indicators">
-                        <li data-bs-target="#owned_accounts" data-bs-slide-to="0" class="active"></li>
-                        <li data-bs-target="#owned_accounts" data-bs-slide-to="1"></li>
-                        <li data-bs-target="#owned_accounts" data-bs-slide-to="2"></li>
-                    </ol>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="account-info">
-                                <h5>Account 1</h5>
-                                <p>Account Number: 123456789</p>
-                                <p>Balance: &#3647;1,000.00</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="account-info">
-                                <h5>Account 2</h5>
-                                <p>Account Number: 987654321</p>
-                                <p>Balance: &#3647;2,500.00</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="account-info">
-                                <h5>Account 3</h5>
-                                <p>Account Number: 555666777</p>
-                                <p>Balance: &#3647;3,750.00</p>
-                            </div>
-                        </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#owned_accounts" role="button" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#owned_accounts" role="button" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </a>
-                    </div>
+                    <ol class="carousel-indicators" id="carousel-indicators"></ol>
+                    <div class="carousel-inner" id="carousel-inner"></div> 
+                    <a class="carousel-control-prev" href="#owned_accounts" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#owned_accounts" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
                 </div>
             </div>
             <label for="bank" id="to-header" class="form-label">To</label>
@@ -73,11 +46,12 @@
             </div>
             <div class="button-container">
                 <a href="/home" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
-                <button type="submit" class="transfer-review-btn">Review</button>
+                <button type="button" class="transfer-review-btn">Review</button>
             </div>
         </form>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>displayAccount({{accounts|tojson}});</script>
 {% endblock %}
