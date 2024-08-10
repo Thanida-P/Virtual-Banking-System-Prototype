@@ -22,9 +22,6 @@ import random
 import bcrypt
 
 from fastapi.security import OAuth2PasswordRequestForm
-# import ZODB, ZODB.FileStorage
-# import transaction
-# import BTrees._OOBTree
 import secrets
 from datetime import datetime, timedelta
 import os
@@ -53,11 +50,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-# storage = ZODB.FileStorage.FileStorage('data/bankdatabase.fs')
-# db = ZODB.DB(storage)
-# connection = db.open()
-# root = connection.root
 
 def hash_password(password: str):
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
@@ -147,9 +139,10 @@ async def homeAdmin(request: Request, user=Depends(manager)):
     return RedirectResponse(url="/home", status_code=302)
 
 @app.get("/transfer", response_class=HTMLResponse)
-async def transfer(request: Request, user=Depends(manager)):
+async def transfer(request: Request, db: Session = Depends(get_db), user=Depends(manager)):
     if isinstance(user, models.UserAccount):
-        return templates.TemplateResponse("transfer.html", {"request": request, "firstname": user.firstname})
+        accounts = crud.getBankAccountsOfUser(db, user.id)
+        return templates.TemplateResponse("transfer.html", {"request": request, "firstname": user.firstname,  "accounts": accounts})
     return RedirectResponse(url="/admin-home", status_code=302)
 
 #withdraw
@@ -226,13 +219,20 @@ async def userManagement(request: Request, user=Depends(manager)):
     return templates.TemplateResponse("admin.html", {"request": request, "firstname": user.firstname})
 
 @app.post("/searchAccount")
-async def searchAccount(request: Request, db: Session = Depends(get_db), searchCitizenID: str = Form(None), banknumber: str = Form(None)):
+async def searchAccount(request: schema.SearchAccountRequest, db: Session = Depends(get_db)):
     customer = None
-    if searchCitizenID is not None:
-        customer = db.query(models.UserAccount).filter(models.UserAccount.citizenID == searchCitizenID).first()
-            
+    account = None
+    if request.searchCitizenID is not None:
+        customer = crud.getUserFromCitizenId(db, request.searchCitizenID)
+    
+    if request.searchAccountNo is not None:
+        account = crud.getBankAccount(db, request.searchAccountNo)
+        customer = crud.getUserFromCitizenId(db, request.searchCitizenID)
+
     if customer is None:
         return {"status": "failed", "message": "User not found"}
+    if account is None and customer is not None and request.searchAccountNo is not None:
+        return {"status": "failed", "message": "Bank Account not found"}
     
     filename = "profile/" + customer.username + "/" + customer.profilePic
     if customer.middlename == "":
@@ -248,15 +248,25 @@ async def searchAccount(request: Request, db: Session = Depends(get_db), searchC
     if customer.education == "unknown":
         education = "Prefer not to answer"
     education = customer.education.capitalize()
-    
-    # if searchCitizenID is None:
-    #     return
+
+    if account is not None:
+        bankAccounttype = ""
+        if account.accountType == "savings":
+            bankAccounttype = "Savings Account"
+        elif account.accountType == "checking":
+            bankAccounttype = "Checking Account"
+        elif account.accountType == "business":
+            bankAccounttype = "Business Account"
+        bankId = account.bankID
+        banknumber = account.banknumber
+        balance = account.balance
+        return {"status": "success", "filename": filename, "fullname": fullname, "username": username, "email": email, "phno": phno, "citizenId": citizenId, "marital": marital, "education": education, "bankAccounttype": bankAccounttype, "bankId": bankId, "banknumber": banknumber, "balance": balance}
     return {"status": "success", "filename": filename, "fullname": fullname, "username": username, "email": email, "phno": phno, "citizenId": citizenId, "marital": marital, "education": education}
     
 @app.put("/updateAccount")
-async def updateAccount(request: Request,db: Session = Depends(get_db) ,fullname: str = Form(None), email: str = Form(None), phno: str = Form(None), maritalstatus: str = Form(None), education: str = Form(None), citizenId: str = Form(None)):
-    if fullname is not None:
-        names = fullname.split(" ")
+async def updateAccount(request: schema.UpdateAccountRequest, db: Session = Depends(get_db)):
+    if request.fullname is not None:
+        names = request.fullname.split(" ")
 
         if len(names) == 1:
             return {"status": "failed", "message": "Invalid name"}
@@ -273,13 +283,17 @@ async def updateAccount(request: Request,db: Session = Depends(get_db) ,fullname
         firstname=firstname,
         middlename=middlename,
         lastname=lastname,
-        maritalstatus=maritalstatus,
-        education=education,
-        email=email,
-        phno=phno,
+        maritalstatus=request.maritalstatus,
+        education=request.education,
+        email=request.email,
+        phno=request.phno,
     )
 
-    crud.updateCustomer(db, citizenId, data)
+    crud.updateCustomer(db, request.citizenId, data)
+   
+@app.delete("/deleteBankAccount")
+def deleteBankAccount(request: Request, db: Session = Depends(get_db), banknumber: str = Form(None)):
+    crud.deleteBankAccount(db, banknumber)
     
 @app.get("/userInfo", response_class=HTMLResponse)
 async def userInfo(request: Request, user=Depends(manager)):

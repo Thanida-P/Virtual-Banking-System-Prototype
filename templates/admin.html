@@ -17,29 +17,29 @@
   <div class="row mb-3">
     <div class="col-md-12">
       <div class="col-md-12">
-        <form>
-          <label for="searchCitizenID" class="form-label text-light"
-            >Enter Citizen ID</label
+        <label for="searchCitizenID" class="form-label text-light"
+          >Enter Citizen ID</label
+        >
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control rounded"
+            name="searchCitizenID"
+            id="searchCitizenID"
+            placeholder="Enter Citizen ID"
+            aria-label="Enter Citizen ID"
+            aria-describedby="search-addon"
+            required
+          />
+          <button
+            type="button"
+            onclick="searchAccount()"
+            id="searchAccountBtn"
+            class="btn btn-outline-primary"
           >
-          <div class="input-group">
-            <input
-              type="search"
-              class="form-control rounded"
-              name="searchCitizenID"
-              placeholder="Enter Citizen ID"
-              aria-label="Enter Citizen ID"
-              aria-describedby="search-addon"
-              required
-            />
-            <button
-              type="button"
-              onclick="searchAccount()"
-              class="btn btn-outline-primary"
-            >
-              Search
-            </button>
-          </div>
-        </form>
+            Search
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -53,30 +53,29 @@
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-12">
-        <form action="/searchBankAccount" method="post">
-          <label for="searchAccountNo" class="form-label text-light"
-            >Enter Account No</label
+        <label for="searchAccountNo" class="form-label text-light"
+          >Enter Account No</label
+        >
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control rounded"
+            name="searchAccountNo"
+            id="searchAccountNo"
+            placeholder="Search Account No"
+            aria-label="Search Account No"
+            aria-describedby="search-addon"
+            required
+          />
+          <button
+            type="button"
+            id="searchBankAccountBtn"
+            class="btn btn-outline-primary"
+            onclick="searchBankAccount()"
           >
-          <div class="input-group">
-            <input
-              type="search"
-              class="form-control rounded"
-              name="searchAccountNo"
-              placeholder="Search Account No"
-              aria-label="Search Account No"
-              aria-describedby="search-addon"
-              required
-            />
-            <button
-              type="button"
-              class="btn btn-outline-primary"
-              data-toggle="modal"
-              data-target="#searchBankModal"
-            >
-              Search
-            </button>
-          </div>
-        </form>
+            Search
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -97,13 +96,7 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-sm-12 d-flex justify-content-center">
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-              alt="avatar"
-              class="rounded-circle img-fluid"
-              style="width: 150px"
-            />
+          <div class="col-sm-12 d-flex justify-content-center" id="bankAccountAvatar">
           </div>
         </div>
         <hr />
@@ -112,7 +105,7 @@
             <p class="mb-0">Full Name</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">Johnatan Smith</p>
+            <p class="text-muted mb-0" id="bankAccountName"></p>
           </div>
         </div>
         <hr />
@@ -121,7 +114,7 @@
             <p class="mb-0">Username</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">username</p>
+            <p class="text-muted mb-0" id="bankAccountUsername"></p>
           </div>
         </div>
         <hr />
@@ -139,7 +132,7 @@
             <p class="mb-0">Email</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">example@example.com</p>
+            <p class="text-muted mb-0" id="bankAccountEmail"></p>
           </div>
         </div>
         <hr />
@@ -148,7 +141,7 @@
             <p class="mb-0">Phone Number</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">(098) 765-4321</p>
+            <p class="text-muted mb-0" id="bankAccountPhno"></p>
           </div>
         </div>
         <hr />
@@ -157,7 +150,7 @@
             <p class="mb-0">Citizen ID</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">1223455678908765</p>
+            <p class="text-muted mb-0" id="bankAccountCitizenID"></p>
           </div>
         </div>
         <hr />
@@ -166,7 +159,7 @@
             <p class="mb-0">Marital Status</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">Single</p>
+            <p class="text-muted mb-0" id="bankAccountMarital"></p>
           </div>
         </div>
         <hr />
@@ -175,7 +168,7 @@
             <p class="mb-0">Education</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">Primary</p>
+            <p class="text-muted mb-0" id="bankAccountEducation"></p>
           </div>
         </div>
         <hr />
@@ -184,7 +177,7 @@
             <p class="mb-0">Bank Account Type</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">Checking Account</p>
+            <p class="text-muted mb-0" id="bankAccountType"></p>
           </div>
         </div>
         <hr />
@@ -193,7 +186,7 @@
             <p class="mb-0">Bank ID</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">BMT</p>
+            <p class="text-muted mb-0" id="bankAccountBankId"></p>
           </div>
         </div>
         <hr />
@@ -202,7 +195,16 @@
             <p class="mb-0">Bank Account Number</p>
           </div>
           <div class="col-sm-8">
-            <p class="text-muted mb-0">123456789222</p>
+            <p class="text-muted mb-0" id="bankAccountNumber"></p>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <p class="mb-0">Balance</p>
+          </div>
+          <div class="col-sm-8">
+            <p class="text-muted mb-0" id="bankAccountBalance"></p>
           </div>
         </div>
       </div>
@@ -319,7 +321,10 @@
                 <p class="mb-0">Citizen ID</p>
               </div>
               <div class="col-sm-8">
-                <p class="text-muted mb-0 showAccount" id="accountCitizenID"></p>
+                <p
+                  class="text-muted mb-0 showAccount"
+                  id="accountCitizenID"
+                ></p>
                 <input
                   type="input"
                   name="citizenId"
@@ -360,11 +365,16 @@
                 <p class="mb-0">Education</p>
               </div>
               <div class="col-sm-8">
-                <p class="text-muted mb-0 showAccount" id="accountEducation"></p>
-                <select id="education" class="form-select editAccount" name="education">
-                  <option value="" disabled>
-                    Select your education level
-                  </option>
+                <p
+                  class="text-muted mb-0 showAccount"
+                  id="accountEducation"
+                ></p>
+                <select
+                  id="education"
+                  class="form-select editAccount"
+                  name="education"
+                >
+                  <option value="" disabled>Select your education level</option>
                   <option value="primary">Primary</option>
                   <option value="secondary">Secondary</option>
                   <option value="tertiary">Tertiary</option>

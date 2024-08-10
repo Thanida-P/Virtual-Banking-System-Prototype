@@ -39,3 +39,15 @@ class CustomerUpdate(BaseModel):
     education: str
     email: EmailStr
     phno: str
+    
+class SearchAccountRequest(BaseModel):
+    searchCitizenID: str = None
+    searchAccountNo: str = None
+    
+class UpdateAccountRequest(BaseModel):
+    fullname: str = None
+    email:str = None
+    phno:str = None
+    citizenId: str = None
+    maritalstatus: str = None
+    education: str = None
