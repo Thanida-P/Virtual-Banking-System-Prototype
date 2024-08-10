@@ -1,9 +1,11 @@
 # from object import *
 import logging
 
+from grpc import Status
+
 logging.basicConfig(level=logging.INFO)
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi import FastAPI, Request, Form, Depends, File, UploadFile, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -320,7 +322,30 @@ async def updateAccount(request: schema.UpdateAccountRequest, db: Session = Depe
     )
 
     crud.updateCustomer(db, request.citizenId, data)
+    
+@app.get("/addAccount", response_class=HTMLResponse)
+async def addAccount(request: Request, user=Depends(manager)):
+    return templates.TemplateResponse("addAccount.html", {"request": request, "firstname": user.firstname})
    
+@app.post("/addAccount")
+async def addAccount(request: schema.AddAccountRequest, db: Session = Depends(get_db), user=Depends(manager)):
+    if request.citizenId == user.citizenID and verify_password(request.password, user.password):
+        bankID = "BMT"
+        banknumber = str(random.randint(1000000000000, 99999999999999))
+        while db.query(models.BankAccount).filter_by(bankID=bankID, banknumber=banknumber).first():
+            banknumber = str(random.randint(1000000000000, 99999999999999))
+
+        bankSchema = schema.BankAccountCreate(
+            accountId=user.id,
+            accountType=request.accountType,
+            bankID=bankID,
+            banknumber=banknumber,
+            balance=1000.0
+        )
+        crud.createBankAccount(db, bankSchema)
+        return RedirectResponse(url="/home", status_code=302)
+        
+            
 @app.delete("/deleteBankAccount")
 def deleteBankAccount(request: Request, db: Session = Depends(get_db), banknumber: str = Form(None)):
     crud.deleteBankAccount(db, banknumber)

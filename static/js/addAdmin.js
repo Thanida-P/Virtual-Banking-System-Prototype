@@ -1,5 +1,3 @@
-// action="/addAdmin" method="post" enctype="multipart/form-data"
-
 async function addAdmin() {
     const form = document.getElementById('add-admin-form');
     const formData = new FormData(form);

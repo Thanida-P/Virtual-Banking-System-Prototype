@@ -1,53 +1,47 @@
-{% extends "sidebar_header.html" %} 
-{%block head%} {{super()}}
-<link rel="stylesheet" href="{{url_for('static',path='css/addAccount.css')}}" />
-{%endblock%} 
-{%block content%}
-<div id="transfer-page" class="container mt-5">
-        <form>
-            <div class="mb-3">
-            <label for="from" id="from-header" class="form-label">From</label>
-            <div class="background-widget-top">
-                <div id="owned_accounts" class="carousel slide small-carousel" interval="false">
-                    <ol class="carousel-indicators" id="carousel-indicators"></ol>
-                    <div class="carousel-inner" id="carousel-inner"></div> 
-                    <a class="carousel-control-prev" href="#owned_accounts" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#owned_accounts" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </a>
+{% extends "sidebar_header.html" %}
+{% block head %}{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', path='css/addAccount.css') }}">
+<script type="text/javascript" src="/static/js/addAccount.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="add-account-page" class="container d-flex align-items-center justify-content-center" style="min-height: 100vh; max-width: 900px;">
+    <div class="row w-100">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header text-center text-white">
+                    <h4>Add New Account</h4>
+                </div>
+                <div class="card-body">
+                    <form id="add-account-form">
+                        <div class="mb-3">
+                            <label for="citizenId" class="form-label">Citizen ID</label>
+                            <input type="text" class="form-control" id="citizenId" name="citizenId" placeholder="Enter your Citizen ID" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="accountType" class="form-label">Account Type</label>
+                            <select class="form-select" id="accountType" name="accountType" required>
+                                <option value="" disabled selected>Select an account type</option>
+                                <option value="checking">Checking Account</option>
+                                <option value="savings">Savings Account</option>
+                                <option value="credit">Credit Account</option>
+                            </select>
+                        </div>  
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+                        </div>
+                        <div class="d-grid gap-2 button-container">
+                            <button type="button" class="btn addAccountBtn" onclick="addAccount()">Add Account</button>
+                            <a href="/home" class="btn cancelBtn">Cancel</a>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <label for="bank" id="to-header" class="form-label">To</label>
-            <div class="background-widget-bottom">
-                <div class="mb-3">
-                    <select class="form-select" id="bank" name="bank" required>
-                        <option value="" disabled selected>Select Bank</option>
-                        <option value="bank1">Bank 1</option>
-                        <option value="bank2">Bank 2</option>
-                        <option value="bank3">Bank 3</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="account_number" class="form-label">Account Number</label>
-                    <input type="text" class="form-control" id="account_number" name="account_number" required>
-                </div>
-                <div id="amount-input">
-                    <label for="amount" class="form-label">Amount</label>
-                    <input type="number" class="form-control" id="amount" name="amount" placeholder="0.00" required>
-                </div>
-            </div>
-            <div class="button-container">
-                <a href="/home" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
-                <button type="button" class="transfer-review-btn">Review</button>
-            </div>
-        </form>
+        </div>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
