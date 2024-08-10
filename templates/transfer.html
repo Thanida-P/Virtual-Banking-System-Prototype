@@ -8,47 +8,45 @@
 
 {% block content %}
     <div id="transfer-page" class="container mt-5">
-        <form>
-            <div class="mb-3">
-            <label for="from" id="from-header" class="form-label">From</label>
-            <div class="background-widget-top">
-                <div id="owned_accounts" class="carousel slide small-carousel" interval="false">
-                    <ol class="carousel-indicators" id="carousel-indicators"></ol>
-                    <div class="carousel-inner" id="carousel-inner"></div> 
-                    <a class="carousel-control-prev" href="#owned_accounts" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#owned_accounts" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </a>
-                </div>
+        <div class="mb-3">
+        <label for="from" id="from-header" class="form-label">From</label>
+        <div class="background-widget-top">
+            <div id="owned_accounts" class="carousel slide small-carousel" interval="false">
+                <ol class="carousel-indicators" id="carousel-indicators"></ol>
+                <div class="carousel-inner" id="carousel-inner"></div> 
+                <a class="carousel-control-prev" href="#owned_accounts" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#owned_accounts" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
             </div>
-            <label for="bank" id="to-header" class="form-label">To</label>
-            <div class="background-widget-bottom">
+        </div>
+        <label for="bank" id="to-header" class="form-label">To</label>
+        <div class="background-widget-bottom">
+            <form id="transfer-form">
                 <div class="mb-3">
-                    <select class="form-select" id="bank" name="bank" required>
+                    <select class="form-select" id="bankId" name="transferBankId" required>
                         <option value="" disabled selected>Select Bank</option>
-                        <option value="bank1">Bank 1</option>
-                        <option value="bank2">Bank 2</option>
-                        <option value="bank3">Bank 3</option>
+                        <option value="BMT">BankMatrix</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="account_number" class="form-label">Account Number</label>
-                    <input type="text" class="form-control" id="account_number" name="account_number" required>
+                    <input type="text" class="form-control" id="banknumberReceiver" name="banknumberReceiver" required>
                 </div>
                 <div id="amount-input">
                     <label for="amount" class="form-label">Amount</label>
                     <input type="number" class="form-control" id="amount" name="amount" placeholder="0.00" required>
                 </div>
-            </div>
-            <div class="button-container">
-                <a href="/home" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
-                <button type="button" class="transfer-review-btn">Review</button>
-            </div>
-        </form>
+            </form>
+        </div>
+        <div class="button-container">
+            <a href="/home" class="cancel-btn" onclick="return confirm('Are you sure you want to cancel?')">Cancel</a>
+            <button type="button" class="transfer-review-btn" onclick="reviewTransfer()">Review</button>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -1,31 +1,42 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     // Add event listener to the form
-//     const form = document.querySelector("form");
-//     form.addEventListener("submit", function (event) {
-//         if (!reviewTransfer()) {
-//             event.preventDefault(); // Prevent form submission if validation fails
-//         }
-//     });
-// });
+function reviewTransfer() {
+    const form = document.getElementById("transfer-form");
+    const formData = new FormData(form);
 
-// function reviewTransfer() {
-//     // Get form elements
-//     const fromAccount = document.querySelector("#owned_accounts .carousel-item.active");
-//     const bank = document.querySelector("#bank").value;
-//     const accountNumber = document.querySelector("#account_number").value;
-//     const amount = document.querySelector("#amount").value;
+    let formObject = {};
+    
+    formData.forEach((value, key) => {
+        formObject[key] = value;
+    });
 
-//     // Check if all fields are filled
-//     if (!fromAccount || !bank || !accountNumber || !amount) {
-//         alert("Please fill in all fields.");
-//     }
+    if (Object.keys(formObject).length === 2) {
+        alert("Please fill in all required fields");
+        return;
+    }
 
-//     window.location.href = '/transfer/review';
-// }
-// var carousel = new bootstrap.Carousel('#owned_accounts', {
-//     interval: false,
-//     ride: false
-// });
+    for (let key in formObject) {
+        if (formObject[key] === "") {
+            alert("Please fill in all required fields");
+            return;
+        }
+    }
+    
+    formObject["banknumber"] = getAccountFromCard();
+    
+    fetch('/transferReview', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formObject)
+    }).then(response => {
+        if (response.ok) {
+            response.json().then(data => {
+                url_parameter = btoa('transferId=' + data.transferId);
+                window.location.href = '/transferReview/' + url_parameter;
+            });
+        }
+    })
+}
 
 function displayAccount(accountDict) {
     let carouselIndicators = document.getElementById('carousel-indicators');
@@ -75,10 +86,18 @@ function displayAccount(accountDict) {
             <div class="account-info">
                 <h5>${accountType}</h5>
                 <p>Balance: &#3647;${account.balance}</p>
-                <p>Account Number: ${account.accountNumber}</p>
+                <p class="account-num">Account Number: ${account.accountNumber}</p>
             </div>
         `;
 
         carouselInner.appendChild(item);
     }
 }
+
+function getAccountFromCard() {
+    const activeCarouselItem = document.querySelector('.carousel-item.active');
+    const accountNumber = activeCarouselItem.querySelector('.account-num').textContent.split(' ')[2];
+
+    return accountNumber;
+}
+

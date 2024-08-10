@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Date, Time, case
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, Date, Time, case
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -64,7 +64,6 @@ class Transaction(Base):
     __tablename__ = 'transactions'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    transactionID = Column(String(255), unique=True, nullable=False)
     bankAccount_id = Column(Integer, ForeignKey('bank_accounts.id'))
     amount = Column(Float, nullable=False)
     fee = Column(Float, nullable=False)
@@ -75,14 +74,19 @@ class Transaction(Base):
     bankAccount = relationship("BankAccount", back_populates="transactions")
 
     __mapper_args__ = {
-        'polymorphic_identity': 'transaction',
-        'polymorphic_on': transferType
+        'polymorphic_identity': 'transactions',
+        'polymorphic_on': case(
+            (type == "transfer", "transfer"),
+            (type == "withdraw", "withdraw"),
+            else_="transactions"
+        )
     }
 
 class Transfer(Transaction):
     __tablename__ = 'transfers'
 
     id = Column(Integer, ForeignKey('transactions.id'), primary_key=True)
+    transferBankId = Column(String(255), nullable=False)
     receiver = Column(String(255), nullable=False)
 
     __mapper_args__ = {
@@ -98,11 +102,3 @@ class Withdraw(Transaction):
     __mapper_args__ = {
         'polymorphic_identity': 'withdraw',
     }
-
-class Currency(Base):
-    __tablename__ = 'currencies'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    currencyID = Column(String(255), unique=True, nullable=False)
-    currencyname = Column(String(255), nullable=False)
-    currencyrate = Column(Float, nullable=False)

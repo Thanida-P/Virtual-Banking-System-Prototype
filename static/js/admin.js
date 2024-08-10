@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  var inputSearchBankAccount = document.getElementById("searchBankAccount");
+  var inputSearchBankAccount = document.getElementById("searchAccountNo");
   inputSearchBankAccount.addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -166,13 +166,14 @@ function updateAccount() {
     formData.forEach((value, key) => {
         formObject[key] = value;
     });
-
+    
     fetch('/updateAccount', {
         method: 'PUT',
         headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(formObject)
+       
     }).then(response => {
         if (response.ok) {
             alert('Account updated successfully!');
