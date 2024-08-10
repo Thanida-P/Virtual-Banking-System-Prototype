@@ -53,10 +53,12 @@ function displayAccount(accountDict) {
                 break;
         }
 
+        formmattedBalance = account.balance.toFixed(2);
+
         item.innerHTML = `
             <div class="account-info">
                 <h5>${accountType}</h5>
-                <p>Balance: &#3647;${account.balance}</p>
+                <p>Balance: &#3647;${formmattedBalance}</p>
                 <p>Account Number: ${account.accountNumber}</p>
             </div>
         `;
@@ -85,3 +87,38 @@ function selectedAccount() {
     .then(data => {
     })
 }
+
+function generate_otp() {
+    otp = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=6));
+    document.getElementById("otp").value = otp;
+    return otp
+}
+
+function proceedWithraw() {
+    // Check if all fields are filled
+    let action = document.getElementById("action").value;
+    let phoneNo = document.getElementById("phone-no").value;
+    let amount = document.getElementById("amount").value;
+    let otp = document.getElementById("otp").value;
+
+    if (action && phoneNo && amount) {
+        // Show the OTP modal
+        $('#transactionOtpModal').modal('show');
+
+        // Generate and display the OTP
+        let otp = generate_otp();
+        document.getElementById("rotp").innerHTML = otp;
+
+        // Set the OTP in the form
+        document.getElementById("otp").value = otp;
+
+    } else {
+        alert("Please fill out all fields.");
+    }
+}
+
+// Handle the OK button click inside the modal
+document.getElementById("confirmOtpButton").addEventListener("click", function() {
+    // Submit the form or perform the transaction
+    document.getElementById("transaction-form").submit();
+});
