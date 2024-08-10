@@ -71,3 +71,13 @@ def updateCustomer(db: Session, citizenId: str, updatingData: schema.CustomerUpd
         
         db.commit()
         
+def getBankAccountsOfUser(db: Session, accountId: str):
+    bankAccounts = {}
+    for account in db.query(models.BankAccount).filter(models.BankAccount.accountId == accountId).all():
+        bankAccount = {}
+        bankAccounts["bankType"] = account.accountType
+        bankAccounts["balance"] = account.balance
+        bankAccounts["accountNumber"] = account.banknumber
+        bankAccounts[account.banknumber] = bankAccount
+    return bankAccounts
+        

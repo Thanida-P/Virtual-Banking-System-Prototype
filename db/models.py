@@ -12,7 +12,7 @@ class Account(Base):
     lastname = Column(String(255), nullable=False)
     username = Column(String(255), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
+    email = Column(String(255), nullable=False)
     phone = Column(String(255), nullable=False)
 
     __mapper_args__ = {
