@@ -78,3 +78,8 @@ class UpdateAccountRequest(BaseModel):
     citizenId: str = None
     maritalstatus: str = None
     education: str = None
+    
+class AddAccountRequest(BaseModel):
+    accountType: str
+    citizenId: str
+    password: str
