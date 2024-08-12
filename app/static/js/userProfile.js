@@ -1,7 +1,18 @@
-var carousel = new bootstrap.Carousel('#accounts', {
-    interval: false,
-    ride: false
-});
+
+function displayPicture(filename) {
+    profile = document.getElementById('profile-image');
+
+    avatarDisplay =
+    '<img src="' +
+    window.location.origin +
+    "/static/profile/" +
+    filename +
+    '" alt="avatar" class="rounded-circle img-fluid" style="width: 125px;" />';
+
+    profile.innerHTML = avatarDisplay;
+  
+}
+
 
 function displayAccount(accountDict) {
     let accounts = document.getElementById('accounts');
