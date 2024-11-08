@@ -8,6 +8,7 @@ For Users:
 - Transfers: Send money between accounts with ease.
 - Withdrawals/Deposits: Add money or take money out of the account by generate the OTP and assuming that user input the right OTP in the ATM
 - Savings Accounts: Manage your savings, track your balance, add new banking accounts<be>
+
 For Administrators:
 - Account Management: Manage user accounts and information
 🚀 Technologies Used<be>
