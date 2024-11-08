@@ -14,7 +14,8 @@ For Administrators:
 - Account Management: Manage user accounts and information
 
 🚀 Technologies Used
-Frontend:<br>
+
+Frontend:
 - HTML
 - Javascript
 - CSS
