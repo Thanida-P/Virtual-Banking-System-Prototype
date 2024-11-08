@@ -10,7 +10,7 @@ For Users:
 - Savings Accounts: Manage your savings, track your balance, add new banking accounts
 For Administrators:
 - Account Management: Manage user accounts and information
-🚀 Technologies Used
+🚀 Technologies Used<br>
 Frontend:
 - HTML
 - Javascript
@@ -22,7 +22,7 @@ Backend:
 Deployment Tool:
 - Docker
 - Docker Swarm for self-recovery
-👥 Contributors
+👥 Contributors<br>
   1. Thanida Paige Pholsukcharoen
   2. Salinporn Rattanaprapaporn
   3. Cyntra
