@@ -6,8 +6,8 @@ services:
       - "8001:8000"
     environment:
       MYSQL_HOST: 'db'
-      MYSQL_USER: 'root'
-      MYSQL_PSWD: 'password123'
+      MYSQL_USER: 'xxx'
+      MYSQL_PSWD: 'xxxx'
       MYSQL_PORT: 3306
       DATABASE_NAME: 'bankmatrix'
       SERVICE: 'authenticator'
@@ -20,8 +20,8 @@ services:
       - "8002:8000"
     environment:
       MYSQL_HOST: 'db'
-      MYSQL_USER: 'root'
-      MYSQL_PSWD: 'password123'
+      MYSQL_USER: 'xxx'
+      MYSQL_PSWD: 'xxxx'
       MYSQL_PORT: 3306
       DATABASE_NAME: 'bankmatrix'
       SERVICE: 'userAccount'
@@ -34,8 +34,8 @@ services:
       - "8003:8000"
     environment:
       MYSQL_HOST: 'db'
-      MYSQL_USER: 'root'
-      MYSQL_PSWD: 'password123'
+      MYSQL_USER: 'xxx'
+      MYSQL_PSWD: 'xxxx'
       MYSQL_PORT: 3306
       DATABASE_NAME: 'bankmatrix'
       SERVICE: 'transfer'
@@ -48,8 +48,8 @@ services:
       - "8004:8000"
     environment:
       MYSQL_HOST: 'db'
-      MYSQL_USER: 'root'
-      MYSQL_PSWD: 'password123'
+      MYSQL_USER: 'xxx'
+      MYSQL_PSWD: 'xxxx'
       MYSQL_PORT: 3306
       DATABASE_NAME: 'bankmatrix'
       SERVICE: 'transaction'
@@ -59,8 +59,8 @@ services:
     image: mysql:8.0
     container_name: bankmatrixdb
     environment:
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: 'password123'
+      MYSQL_USER: 'xxx'
+      MYSQL_PSWD: 'xxxx'
       MYSQL_DATABASE: 'bankmatrix'
     ports:
       - "3306:3306"
