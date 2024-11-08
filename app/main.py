@@ -42,6 +42,19 @@ app.include_router(userAccount)
 app.include_router(transferMoney)
 app.include_router(transactionMoney)
 
+if os.getenv("SERVICE") == "authenticator":
+    from app.api.authenticator import authenticator as auth_router
+    app.include_router(auth_router, prefix="/authenticator")
+elif os.getenv("SERVICE") == "userAccount":
+    from app.api.userAccountManagement import userAccount as userAccount_router
+    app.include_router(userAccount_router, prefix="/userAccount")
+elif os.getenv("SERVICE") == "transfer":
+    from app.api.transfer import transferMoney as transfer_router
+    app.include_router(transfer_router, prefix="/transfer")
+elif os.getenv("SERVICE") == "transaction":
+    from app.api.transaction import transactionMoney as transaction_router
+    app.include_router(transaction_router, prefix="/transaction")
+
 #check if the user is login
 @app.exception_handler(NotAuthenticatedException)
 def auth_exception_handler(request: Request, exc: NotAuthenticatedException):
