@@ -32,4 +32,4 @@ Deployment Tool:
 👥 Contributors<br>
   1. Thanida Paige Pholsukcharoen
   2. Salinporn Rattanaprapaporn
-  3. Cyntra
+  3. Myo Pa Pa Kyaw
