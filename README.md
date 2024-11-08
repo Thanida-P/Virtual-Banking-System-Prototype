@@ -11,18 +11,22 @@ For Users:
 
 For Administrators:
 - Account Management: Manage user accounts and information
+
 🚀 Technologies Used<be>
 Frontend:<br>
 - HTML
 - Javascript
 - CSS
-- Bootstrap<br>
+- Bootstrap<be>
+
 Backend:
 - FastAPI
-- SQLAlchemy<br>
+- SQLAlchemy<be>
+
 Deployment Tool:
 - Docker
-- Docker Swarm for self-recovery<br>
+- Docker Swarm for self-recovery<be>
+
 👥 Contributors<br>
   1. Thanida Paige Pholsukcharoen
   2. Salinporn Rattanaprapaporn
