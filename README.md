@@ -1,7 +1,7 @@
 # Virtual Banking System Prototype
 
 🏦 About Virtual Banking System Prototype <br>
-It is a group project undertaken during the 3rd year, Semester 1, in the Web Service and SOA to understand microservices and SOA.
+A group project undertaken during our 1st semester of the 3rd year, in the Web Service and SOA to understand microservices and SOA.
 
 📚 Key Features<br>
     For Users:
